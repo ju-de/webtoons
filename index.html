@@ -13,13 +13,12 @@
   <body>
     <main class="shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="兔n home"><span class="brand-mark">兔</span> 兔n</a>
-        <a class="profile-link" href="https://www.anime-planet.com/users/cheob" target="_blank" rel="noreferrer">cheob's library <span aria-hidden="true">↗</span></a>
+        <a class="brand" href="#top" aria-label="兔n home"><span class="brand-mark">兔</span> n</a>
+        <a class="profile-link" href="https://www.anime-planet.com/users/cheob" target="_blank" rel="noreferrer">cheob's library</a>
       </header>
 
       <section class="hero" id="top">
-        <p class="eyebrow">a little reading compass</p>
-        <h1>your <em>shelf.</em></h1>
+        <p class="eyebrow">quicklinks</p>
 
         <form class="search-panel" id="search-form">
           <label for="title-search">What are you looking for?</label>
@@ -38,12 +37,12 @@
             <h2 id="next-title">Your queue is waiting</h2>
             <p id="next-meta">Add a title below and it will appear here.</p>
           </div>
-          <button class="text-button" id="continue-reading" type="button" disabled>Open search <span aria-hidden="true">↗</span></button>
+          <button class="text-button" id="continue-reading" type="button" disabled>Open search</button>
         </article>
         <div class="stats" aria-label="Library statistics">
           <div><strong id="reading-count">0</strong><span>reading</span></div>
           <div><strong id="queue-count">0</strong><span>in queue</span></div>
-          <div><strong id="done-count">0</strong><span>finished</span></div>
+          <div><strong id="done-count">0</strong><span>complete</span></div>
         </div>
       </section>
 
@@ -52,23 +51,24 @@
         <div class="shelf-actions">
           <label class="import-btn" for="import-file">↑ import</label>
           <input type="file" id="import-file" accept=".json" hidden />
-          <button class="add-button" id="show-add" type="button">+ add</button>
+          <button class="import-btn" id="export-btn" type="button">↓ export</button>
         </div>
       </section>
 
-      <form class="add-form" id="add-form" hidden>
-        <div class="field title-field"><label for="toon-title">Title</label><input id="toon-title" required placeholder="e.g. The Greatest Estate Developer" /></div>
-        <div class="field"><label for="toon-status">Status</label><select id="toon-status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="finished">Finished</option></select></div>
-        <div class="field"><label for="toon-progress">Chapter</label><input id="toon-progress" type="number" min="0" value="0" /></div>
-        <div class="field"><label for="toon-mood">Mood</label><select id="toon-mood"><option>Action</option><option>Romance</option><option>Fantasy</option><option>Comedy</option><option>Drama</option><option>Cozy</option><option>Horror</option></select></div>
-        <button type="submit">Save</button>
-      </form>
-
+      <div class="library-filter">
+        <input id="library-search" type="search" placeholder="filter or type to add…" autocomplete="off" />
+      </div>
       <div class="filters" role="group" aria-label="Filter your library">
         <button class="filter active" data-filter="all" type="button">All <span id="all-total">0</span></button>
-        <button class="filter" data-filter="reading" type="button">Reading</button>
-        <button class="filter" data-filter="queue" type="button">Queue</button>
-        <button class="filter" data-filter="finished" type="button">Finished</button>
+        <button class="filter" data-filter="reading" type="button">Reading <span id="reading-total">0</span></button>
+        <button class="filter" data-filter="queue" type="button">Queue <span id="queue-total">0</span></button>
+        <button class="filter" data-filter="complete" type="button">Complete <span id="complete-total">0</span></button>
+        <select id="sort-select" class="sort-select" aria-label="Sort order">
+          <option value="updated-desc">↓ recent</option>
+          <option value="updated-asc">↑ recent</option>
+          <option value="alpha-asc">a → z</option>
+          <option value="alpha-desc">z → a</option>
+        </select>
       </div>
       <section class="library" id="library" aria-live="polite"></section>
 
@@ -83,8 +83,7 @@
 
     <template id="toon-template">
       <article class="toon-card">
-        <div class="toon-icon" aria-hidden="true"></div>
-        <div class="toon-details"><div class="card-title-row"><h3></h3><button class="delete" type="button" aria-label="Remove title">×</button></div><p class="toon-subtitle"></p><div class="card-controls"><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="finished">Finished</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="open-search" type="button">Find <span aria-hidden="true">↗</span></button></div></div>
+        <div class="toon-details"><h3></h3><span class="toon-updated"></span><div class="card-controls"><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="complete">Complete</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="delete" type="button" aria-label="Remove title">×</button></div></div>
       </article>
     </template>
 
