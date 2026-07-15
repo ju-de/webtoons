@@ -113,7 +113,7 @@ h1 em { color:var(--pink-dark); font-style:italic; }
 .toon-subtitle { color:var(--muted); margin:3px 0 10px; font-size:.78rem; }
 .toon-subtitle:empty { display:none; margin:0; }
 .toon-notes { border-top:1.5px solid var(--line-dark); margin-top:8px; padding-top:4px; }
-.notes-input { width:100%; border:none; background:transparent; color:var(--ink); font-family:'Nunito',sans-serif; font-size:.82rem; line-height:1.55; resize:none; outline:none; padding:4px 0; min-height:54px; display:block; }
+.notes-input { width:100%; border:none; background:transparent; color:var(--ink); font-family:'Nunito',sans-serif; font-size:.82rem; line-height:1.55; resize:none; outline:none; padding:4px 0; min-height:100px; display:block; }
 .notes-input::placeholder { color:var(--faint); }
 .delete { color:var(--muted); border:0; background:transparent; font-size:1.2rem; line-height:.75; transition:color .15s; }
 .delete:hover { color:#e08099; }
