@@ -174,19 +174,28 @@ document.querySelector('#import-file').addEventListener('change', function(e) {
     try {
       const data = JSON.parse(evt.target.result);
       const statusMap = { 'reading': 'reading', 'read': 'complete', 'stalled': 'queue', 'want to read': 'queue' };
+      const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
       const parseDate = s => { if (!s) return 0; const t = new Date(s.replace(' ','T').replace(/\+0+$/,'Z')).getTime(); return isNaN(t) ? 0 : t; };
+      // Build normalized title → best timestamp map from anime-planet data
+      const apTimestamps = new Map();
+      const apStatus = new Map();
+      for (const e of (data.entries || [])) {
+        const ts = parseDate(e.completed) || parseDate(e.started);
+        const key = norm(e.name);
+        if (ts > 0) apTimestamps.set(key, ts);
+        if (statusMap[e.status]) apStatus.set(key, statusMap[e.status]);
+      }
       const existing = getToons();
-      // Restore timestamps for existing entries that match by title
+      // Restore timestamps (and optionally status) for existing entries via fuzzy match
       const restored = existing.map(t => {
-        const match = (data.entries || []).find(e => e.name.toLowerCase() === t.title.toLowerCase());
-        if (!match) return t;
-        const ts = parseDate(match.completed) || parseDate(match.started);
+        const key = norm(t.title);
+        const ts = apTimestamps.get(key);
         return ts ? { ...t, updatedAt: ts } : t;
       });
       // Add new entries not already in the library
-      const restoredTitles = new Set(restored.map(t => t.title.toLowerCase()));
+      const restoredKeys = new Set(restored.map(t => norm(t.title)));
       const newEntries = (data.entries || [])
-        .filter(entry => statusMap[entry.status] && !restoredTitles.has(entry.name.toLowerCase()))
+        .filter(entry => statusMap[entry.status] && !restoredKeys.has(norm(entry.name)))
         .map(entry => ({ id: crypto.randomUUID(), title: entry.name, status: statusMap[entry.status], chapter: entry.ch || 0, updatedAt: parseDate(entry.completed) || parseDate(entry.started) || Date.now() }));
       saveToons([...restored, ...newEntries]);
       render();
@@ -204,7 +213,7 @@ suggestions.forEach(rec => {
 document.querySelector('#export-btn').addEventListener('click', () => {
   const a = Object.assign(document.createElement('a'), {
     href: URL.createObjectURL(new Blob([JSON.stringify(getToons(), null, 2)], {type:'application/json'})),
-    download: 'toonn-library.json'
+    download: '兔n-library.json'
   });
   a.click(); URL.revokeObjectURL(a.href);
 });
