@@ -31,6 +31,7 @@ function searchUrl(title, source = 'web') {
   const sites = {
     web: `https://www.bing.com/search?q=${query}%20manga`,
     'anime-planet': `https://www.anime-planet.com/manga/all?name=${query}`,
+    'manga-updates': `https://www.mangaupdates.com/site/search/result?search=${query.replace(/%20/g,'+')}`,
     atsu: `https://atsu.moe/explore?search=${query}`,
     kagane: `https://kagane.to/search?q=${query}`,
     comix: `https://comix.to/browse?q=${query}&sort=relevance%3Adesc`
@@ -54,25 +55,10 @@ function updateDashboard(toons) {
   const counts = ['reading', 'queue', 'complete'].reduce((acc, status) => {
     acc[status] = toons.filter(t => t.status === status).length; return acc;
   }, {});
-  document.querySelector('#reading-count').textContent = counts.reading;
-  document.querySelector('#queue-count').textContent = counts.queue;
-  document.querySelector('#done-count').textContent = counts.complete;
   document.querySelector('#all-total').textContent = toons.length;
   document.querySelector('#reading-total').textContent = counts.reading;
   document.querySelector('#queue-total').textContent = counts.queue;
   document.querySelector('#complete-total').textContent = counts.complete;
-  const next = toons.find(t => t.status === 'reading') || toons.find(t => t.status === 'queue');
-  const nextTitle = document.querySelector('#next-title');
-  const nextMeta = document.querySelector('#next-meta');
-  const continueButton = document.querySelector('#continue-reading');
-  if (next) {
-    nextTitle.textContent = next.title;
-    nextMeta.textContent = `${next.status === 'reading' ? 'Currently reading' : 'First up in your queue'} · Ch. ${next.chapter || 0}`;
-    continueButton.disabled = false;
-    continueButton.onclick = () => openSearch(next.title, 'web');
-  } else {
-    nextTitle.textContent = 'Your queue is waiting'; nextMeta.textContent = 'Add a title below and it will appear here.'; continueButton.disabled = true;
-  }
 }
 function renderFavorites() {
   const el = document.querySelector('#favorites-list');
@@ -214,20 +200,27 @@ function updateToon(id, changes) { saveToons(getToons().map(t => t.id === id ? {
 
 searchForm.addEventListener('submit', e => e.preventDefault());
 const _srcs = [
-  { key: 'web',          label: 'Web Search' },
-  { key: 'anime-planet', label: 'Anime-Planet' },
-  { key: 'atsu',         label: 'atsu.moe' },
-  { key: 'kagane',       label: 'kagane.to' },
-  { key: 'comix',        label: 'comix.to' },
+  { key: 'anime-planet', label: 'Anime-Planet', home: 'https://www.anime-planet.com/manga' },
+  { key: 'manga-updates',label: 'MangaUpdates', home: 'https://www.mangaupdates.com' },
+  { key: 'atsu',         label: 'atsu.moe',     home: 'https://atsu.moe' },
+  { key: 'kagane',       label: 'kagane.to',    home: 'https://kagane.to' },
+  { key: 'comix',        label: 'comix.to',     home: 'https://comix.to' },
 ];
-searchInput.addEventListener('input', () => {
+function updateSearchPills() {
   const query = searchInput.value.trim();
   const resultsDiv = document.querySelector('#search-results');
-  if (!query) { resultsDiv.hidden = true; resultsDiv.innerHTML = ''; return; }
   resultsDiv.innerHTML = _srcs.map(s =>
-    `<a class="result-pill" href="${searchUrl(query, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`
+    query
+      ? `<a class="result-pill" href="${searchUrl(query, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`
+      : `<a class="result-pill" href="${s.home}" target="_blank" rel="noopener noreferrer">${s.label}</a>`
   ).join('');
   resultsDiv.hidden = false;
+}
+searchInput.addEventListener('input', updateSearchPills);
+searchInput.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const q = searchInput.value.trim();
+  if (q) window.open(searchUrl(q, 'web'), '_blank', 'noopener,noreferrer');
 });
 document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
   activeFilter = button.dataset.filter;
@@ -758,9 +751,154 @@ const _altTitles = {
   "senpai is an otokonoko": ["センパイはオトコのコ"],
   "the witch and the beast": ["魔女と野獣"],
   "kemono jihen": ["怪物事変"],
+  // ── Korean (comprehensive fill-in) ────────────────────────────────────────
+  "villains are destined to die": ["악당은 멸망하게 되어 있다"],
+  "like wind on a dry branch": ["마른 나뭇가지에 바람처럼"],
+  "seasons of blossom": ["꽃이 피는 시절"],
+  "a capable maid": ["유능한 하녀"],
+  "a child who looks like me": ["나를 닮은 아이"],
+  "agatha": ["아가사"],
+  "bride of obsidian": ["흑요석의 신부"],
+  "can i bite you": ["물어도 돼요?"],
+  "childhood friend complex": ["소꿉친구 콤플렉스"],
+  "codename anastasia": ["코드명: 아나스타샤"],
+  "college student empress": ["대학생 황후"],
+  "daytime in the bunker": ["낮의 벙커"],
+  "dear villainous husband the one to be obsessed with is over there": ["사랑하는 악당 남편, 집착 대상이 잘못됐습니다"],
+  "emerald midnight s lover": ["绿光午夜的恋人"],
+  "failed to abandon the villain": ["악당을 포기하지 못했다"],
+  "fall in love or die": ["사랑하거나 죽거나"],
+  "for your perfect ending": ["최선의 결말을 위하여"],
+  "hero killer": ["영웅을 죽이는 방법"],
+  "high society": ["상류사회"],
+  "how to change the genre from angst to heartwarming": ["장르를 바꿔라!"],
+  "i became the duke s male servant": ["공작의 남자 하인이 되었다"],
+  "i m stanning the duke": ["공작님을 덕질하는 법"],
+  "imprisoned by the mad dog i raised": ["내가 기른 미친개에게 갇혔다"],
+  "in between": ["사이"],
+  "it s just business": ["그냥 비즈니스"],
+  "lookalike daughter": ["닮은꼴 딸"],
+  "love in session": ["사랑중"],
+  "love bullet": ["러브 불릿"],
+  "marriage of convenience": ["편의 결혼"],
+  "men of the harem": ["하렘의 남자들"],
+  "miss pendleton": ["미스 펜들턴"],
+  "my beloved oppressor": ["나의 사랑스러운 폭군"],
+  "my fiance is in love with my little sister": ["내 약혼자가 내 여동생을 좋아해"],
+  "my mom entered a contract marriage": ["엄마가 계약 결혼을 했어요"],
+  "now come and regret": ["이제 와서 후회해"],
+  "once it was love": ["한때는 사랑이었다"],
+  "pendleton revolution": ["펜들턴 혁명"],
+  "powerful confession": ["강렬한 고백"],
+  "princess wars": ["공주들의 전쟁"],
+  "proposed to by a villain": ["악당한테 프로포즈받다"],
+  "pure love operation": ["순애작전"],
+  "queen cecia s shorts": ["세실리아 황후의 반바지"],
+  "really truly getting divorced": ["진짜로 이혼하게 됐다"],
+  "red fox": ["붉은 여우"],
+  "run away from me": ["도망쳐봐"],
+  "seabird and the wolf": ["물새와 늑대"],
+  "seabird and wolf": ["물새와 늑대"],
+  "selfish romance": ["이기적 로맨스"],
+  "spoil of war duchess": ["전리품 공작부인"],
+  "tears on a withered flower": ["시든 꽃에 눈물을"],
+  "the marquis meitner s funeral": ["마이트너 후작의 장례식"],
+  "the player hides his past": ["플레이어를 숨겨라"],
+  "the player with a hidden past": ["플레이어를 숨겨라"],
+  "the warrior returns": ["전사가 돌아온다"],
+  "tutorial tower of the advanced player": ["고수의 튜토리얼 탑"],
+  "the advanced player of the tutorial tower": ["고수의 튜토리얼 탑"],
+  "your ryan": ["당신의 라이언"],
+  "fly me to the moon": ["월에 키스를", "月にキスを"],
+  "farewell": ["이별"],
+  "muse on fame": ["명성을 향한 뮤즈"],
+  "my mom entered a contract marriage": ["엄마가 계약 결혼을 했어요"],
+  "for my derelict favorite": ["내 방치된 최애를 위해"],
+  "on the way to meet mom": ["엄마를 만나러 가는 길"],
+  "my princess charming": ["나의 공주 차밍"],
+  "how to get my husband on my side": ["남편의 편을 얻는 방법"],
+  "the broken ring": ["깨진 반지"],
+  "proof of dignity": ["품위의 증거"],
+  "the swan s grave": ["백조의 무덤"],
+  "secret lady": ["비밀의 레이디"],
+  "my deepest secret": ["나의 가장 깊은 비밀"],
+  "lady crystal is a man": ["크리스탈 레이디는 남자다"],
+  "the maid and the vampire": ["메이드와 뱀파이어"],
+  "guardians of the lamb": ["어린 양을 지키는 자들"],
+  "miss not so sidekick": ["사이드킥이 아니고요!"],
+  "from knight to lady": ["기사에서 숙녀로"],
+  "from a knight to a lady": ["기사에서 숙녀로"],
+  "this time i will find happiness": ["이번엔 행복을 찾을게"],
+  "the villainess needs her tyrant": ["악녀는 폭군이 필요해"],
+  "the maid and the vampire": ["메이드와 뱀파이어"],
+  "ghost teller": ["귀담아 들어봐"],
+  "the world without my sister who everyone loved": ["모두가 사랑했던 내 동생이 없는 세상"],
+  "lost in translation": ["번역가 무뢰한"],
+  "your eternal lies": ["영원한 거짓말"],
+  "the spark in your eyes": ["그 눈빛을 마주치면"],
+  "survive as the hero s wife": ["용사 아내로 살아남기"],
+  "lookalike daughter": ["닮은꼴 딸"],
+  "how to win my husband over": ["남편을 내 편으로 만드는 법"],
+  "children of orbit": ["궤도의 아이들"],
+  "a good day to be a dog": ["오늘도 사랑스럽개"],
+  "gyeongseong mermaid": ["경성 인어공주"],
+  "whale star the gyeongseong mermaid": ["경성 인어공주"],
+  "the elixir of the sun": ["태양의 영약"],
+  "the blood of madame giselle": ["마담 지젤의 피"],
+  "for your murder": ["너의 살인을 위하여"],
+  "black winter": ["검은 겨울"],
+  "the rabbit hole": ["토끼굴"],
+  "mystic prince": ["비술 왕자"],
+  "the first night with the duke": ["공작님과의 첫날 밤"],
+  "finding camelia": ["카멜리아를 찾아서"],
+  "finding camellia": ["카멜리아를 찾아서"],
+  "the villainess lives again": ["악녀는 두 번 산다"],
+  "the abandoned empress": ["버림받은 황비"],
+  "beware the villainess": ["그 악녀를 조심하세요!"],
+  "the villainess turns the hourglass": ["악녀는 모래시계를 되돌린다"],
+  "light and shadow": ["빛과 그림자"],
+  "spirit fingers": ["스피릿 핑거스"],
+  "kill the villainess": ["악녀를 죽여라"],
+  "surviving romance": ["로맨스 생존기"],
+  "unholy blood": ["불경한 피"],
+  "the crown princess scandal": ["황태자비 납치사건"],
+  "the pale horse": ["창백한 말"],
+  "the maid and the vampire": ["메이드와 뱀파이어"],
+  "all of us are dead": ["지금 우리 학교는"],
+  "our beloved summer": ["그해 우리는"],
+  "a stepmother s marchen": ["어느 날 공주가 되어버렸다"],
+  "cry or better yet beg": ["울어, 아니 차라리 빌어"],
+  "jinx": ["징크스"],
+  "roxana": ["록사나"],
+  "second life of a trash princess": ["쓰레기 공주의 두 번째 삶"],
+  "the age of arrogance": ["오만의 시대"],
+  "the tainted half": ["오염된 절반"],
+  "secret alliance": ["비밀 동맹"],
+  "one of a kind romance": ["유일무이한 로맨스"],
+  "trapped": ["올가미"],
+  "just leave me be": ["그냥 내버려 둬"],
+  "your throne": ["그대의 옥좌"],
+  "the remarried empress": ["재혼 황후"],
+  "odd girl out": ["아웃사이더"],
+  "lookism": ["외모지상주의"],
+  "viral hit": ["싸움독학","How to Fight"],
+  "how to fight": ["싸움독학","Viral Hit"],
+  "the villainess needs her tyrant": ["악녀는 폭군이 필요해"],
+  "lady baby": ["레이디 베이비"],
+  "doom breaker": ["절대검감"],
+  "gosu": ["고수"],
+  "weak hero": ["약한영웅"],
+  "cheese in the trap": ["치즈인더트랩"],
+  "the boxer": ["더 복서"],
+  "god of blackfield": ["검은 땅의 지배자"],
+  "sss class revival hunter": ["SSS급 죽어야 사는 헌터"],
+  "return of the blossoming blade": ["화산귀환"],
+  "see you in my 19th life": ["나의 19번째 삶"],
+  "iseop s romance": ["이솝이야기 로맨스","Inso's Law"],
+  "the sound of magic annarasumanara": ["안나라수마나라"],
 };
 (function importAltTitles() {
-  if (localStorage.getItem('toonn-alts-v1')) return;
+  if (localStorage.getItem('toonn-alts-v2')) return;
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
   const toons = getToons().map(t => ({...t}));
   for (const t of toons) {
@@ -770,7 +908,7 @@ const _altTitles = {
     }
   }
   saveToons(toons);
-  localStorage.setItem('toonn-alts-v1', '1');
+  localStorage.setItem('toonn-alts-v2', '1');
 })();
 (function setVerifiedBadges() {
   if (localStorage.getItem('toonn-verified-v1')) return;
@@ -778,4 +916,5 @@ const _altTitles = {
   saveToons(toons);
   localStorage.setItem('toonn-verified-v1', '1');
 })();
+updateSearchPills();
 render();
