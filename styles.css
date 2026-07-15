@@ -101,8 +101,8 @@ h1 em { color:var(--pink-dark); font-style:italic; }
 .library { display:grid; grid-template-columns:1fr; gap:10px; min-height:100px; }
 .toon-card { display:flex; gap:14px; padding:11px 14px; background:var(--card); border:1.5px solid var(--line); border-radius:16px; box-shadow:var(--shadow); transition:box-shadow .15s, background .15s; cursor:pointer; min-width:0; }
 .toon-card:hover { box-shadow:0 4px 18px rgba(60,50,120,0.16); background:var(--card-2); }
-.toon-card.is-complete { background:#bdd8f5; border-color:rgba(70,130,210,0.35); }
-.toon-card.is-complete:hover { background:#aecef2; }
+.toon-card.is-complete { background:#d6eafb; border-color:rgba(70,130,210,0.2); }
+.toon-card.is-complete:hover { background:#c6e1f9; }
 .toon-card.copied { border-color:var(--pink-dark); }
 .toon-details { min-width:0; flex:1; display:flex; align-items:center; gap:10px; }
 .toon-updated { font-size:.58rem; font-family:'Silkscreen',monospace; color:var(--faint); flex-shrink:0; white-space:nowrap; }
