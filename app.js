@@ -29,11 +29,11 @@ function saveToons(toons) { localStorage.setItem(storageKey, JSON.stringify(toon
 function searchUrl(title, source = 'web') {
   const query = encodeURIComponent(title.trim());
   const sites = {
-    web: `https://www.google.com/search?q=${query}+webtoon`,
-    'anime-planet': `https://www.google.com/search?q=site%3Aanime-planet.com%2Fmanga+${query}`,
-    atsu: `https://www.google.com/search?q=site%3Aatsu.moe+${query}`,
-    kagane: `https://www.google.com/search?q=site%3Akagane.to+${query}`,
-    comix: `https://www.google.com/search?q=site%3Acomix.to+${query}`
+    web: `https://www.bing.com/search?q=${query}%20manga`,
+    'anime-planet': `https://www.anime-planet.com/manga/all?name=${query}`,
+    atsu: `https://atsu.moe/explore?search=${query}`,
+    kagane: `https://kagane.to/search?q=${query}`,
+    comix: `https://comix.to/browse?q=${query}&sort=relevance%3Adesc`
   };
   return sites[source];
 }
@@ -77,17 +77,37 @@ function updateDashboard(toons) {
 function renderFavorites() {
   const el = document.querySelector('#favorites-list');
   if (!el) return;
-  const favs = getToons().filter(t => t.favorite);
+  const favs = getToons().filter(t => t.favorite).sort((a, b) => (a.favOrder || 0) - (b.favOrder || 0));
   el.innerHTML = '';
   if (!favs.length) {
     const p = document.createElement('p'); p.className = 'favorites-empty'; p.textContent = 'star a webtoon to pin it here';
     el.appendChild(p); return;
   }
+  let dragSrc = null;
   favs.forEach(t => {
-    const item = document.createElement('div'); item.className = 'fav-item';
+    const item = document.createElement('div');
+    item.className = 'fav-item'; item.draggable = true; item.dataset.id = t.id;
+    const handle = document.createElement('span'); handle.className = 'fav-drag-handle'; handle.textContent = '⠿';
     const ts = document.createElement('span'); ts.className = 'fav-title'; ts.textContent = t.title;
     const ms = document.createElement('span'); ms.className = 'fav-meta'; ms.textContent = `${t.status} · ch ${t.chapter || 0}`;
-    item.appendChild(ts); item.appendChild(ms);
+    item.appendChild(handle); item.appendChild(ts); item.appendChild(ms);
+    item.addEventListener('dragstart', e => { dragSrc = item; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => item.classList.add('dragging'), 0); });
+    item.addEventListener('dragend', () => { item.classList.remove('dragging'); el.querySelectorAll('.fav-item').forEach(i => i.classList.remove('drag-over')); dragSrc = null; });
+    item.addEventListener('dragover', e => { e.preventDefault(); if (item !== dragSrc) item.classList.add('drag-over'); });
+    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      if (!dragSrc || dragSrc === item) return;
+      item.classList.remove('drag-over');
+      const items = [...el.querySelectorAll('.fav-item')];
+      const srcIdx = items.indexOf(dragSrc);
+      const ids = items.map(i => i.dataset.id);
+      ids.splice(srcIdx, 1);
+      ids.splice(ids.indexOf(item.dataset.id), 0, dragSrc.dataset.id);
+      const all = getToons();
+      ids.forEach((id, i) => { const ti = all.findIndex(t => t.id === id); if (ti >= 0) all[ti].favOrder = i; });
+      saveToons(all); renderFavorites();
+    });
     item.addEventListener('click', () => window.open(searchUrl(t.title, 'anime-planet'), '_blank', 'noopener,noreferrer'));
     el.appendChild(item);
   });
@@ -106,40 +126,84 @@ function render() {
   }
   sorted.forEach(toon => {
     const card = template.content.cloneNode(true);
-    card.querySelector('h3').textContent = toon.title;
+    card.querySelector('.title-h3').textContent = toon.title;
+    if (toon.verified) card.querySelector('.verified-badge').hidden = false;
     card.querySelector('.toon-updated').textContent = relativeTime(toon.updatedAt);
     const article = card.querySelector('.toon-card');
     const status = card.querySelector('.status-select'); status.value = toon.status;
     const chapter = card.querySelector('.chapter-input'); chapter.value = toon.chapter || 0;
     chapter.disabled = toon.status === 'complete';
     if (toon.status === 'complete') article.classList.add('is-complete');
+    if (toon.status === 'reading') article.classList.add('is-reading');
     status.addEventListener('change', () => {
       const isComplete = status.value === 'complete';
       chapter.disabled = isComplete;
       article.classList.toggle('is-complete', isComplete);
+      article.classList.toggle('is-reading', status.value === 'reading');
       updateToon(toon.id, { status: status.value });
     });
     chapter.addEventListener('change', () => updateToon(toon.id, { chapter: Math.max(0, Number(chapter.value) || 0) }));
     const notesDiv = card.querySelector('.toon-notes');
     const notesTA = card.querySelector('.notes-input');
     notesTA.value = toon.notes || '';
+    const titleH3 = card.querySelector('.title-h3');
     article.addEventListener('click', e => {
-      if (e.target.closest('.status-select, .chapter-input, .chapter-label, .delete, .notes-input, .fav-btn')) return;
-      notesDiv.hidden = !notesDiv.hidden;
-      if (!notesDiv.hidden) setTimeout(() => notesTA.focus(), 10);
+      if (e.target.closest('.status-select, .chapter-input, .chapter-label, .delete, .notes-input, .fav-btn, .alt-input, .alt-add-btn, .alt-tag')) return;
+      if (e.target.closest('.title-h3') && !notesDiv.hidden) return;
+      const expanding = notesDiv.hidden;
+      notesDiv.hidden = !expanding;
+      titleH3.contentEditable = expanding ? 'true' : 'false';
+      if (expanding) {
+        const clickedTitle = !!e.target.closest('.title-h3');
+        setTimeout(() => (clickedTitle ? titleH3 : notesTA).focus(), 10);
+      }
     });
     notesTA.addEventListener('input', () => {
       const all = getToons();
       const idx = all.findIndex(t => t.id === toon.id);
       if (idx >= 0) { all[idx].notes = notesTA.value; saveToons(all); }
     });
+    const altsLine = card.querySelector('.toon-alts-line');
+    if (toon.alts && toon.alts.length) altsLine.textContent = toon.alts.join(' · ');
+    titleH3.addEventListener('input', () => {
+      const val = titleH3.textContent.replace(/[\r\n]/g, '').trim();
+      const all = getToons(); const idx = all.findIndex(t => t.id === toon.id);
+      if (idx >= 0) { all[idx].title = val; toon.title = val; saveToons(all); }
+    });
+    titleH3.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); notesTA.focus(); } });
+    titleH3.addEventListener('paste', e => { e.preventDefault(); const t = (e.clipboardData || window.clipboardData).getData('text/plain'); document.execCommand('insertText', false, t); });
+    const altsTags = card.querySelector('.alts-tags');
+    const altInput = card.querySelector('.alt-input');
+    const altAddBtn = card.querySelector('.alt-add-btn');
+    function refreshAltTags() {
+      altsTags.innerHTML = '';
+      (toon.alts || []).forEach((alt, i) => {
+        const tag = document.createElement('span'); tag.className = 'alt-tag';
+        const txt = document.createElement('span'); txt.textContent = alt;
+        const btn = document.createElement('button'); btn.textContent = '×'; btn.type = 'button';
+        btn.addEventListener('click', () => {
+          const all = getToons(); const idx = all.findIndex(t => t.id === toon.id);
+          if (idx >= 0) { all[idx].alts = (all[idx].alts || []).filter((_, j) => j !== i); toon.alts = all[idx].alts; saveToons(all); }
+          refreshAltTags(); altsLine.textContent = (toon.alts || []).join(' · ');
+        });
+        tag.appendChild(txt); tag.appendChild(btn); altsTags.appendChild(tag);
+      });
+    }
+    refreshAltTags();
+    altAddBtn.addEventListener('click', () => {
+      const val = altInput.value.trim(); if (!val) return;
+      const all = getToons(); const idx = all.findIndex(t => t.id === toon.id);
+      if (idx >= 0) { if (!all[idx].alts) all[idx].alts = []; all[idx].alts.push(val); toon.alts = all[idx].alts; saveToons(all); }
+      refreshAltTags(); altsLine.textContent = (toon.alts || []).join(' · '); altInput.value = '';
+    });
+    altInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); altAddBtn.click(); } });
     const favBtn = card.querySelector('.fav-btn');
     favBtn.textContent = toon.favorite ? '★' : '☆';
     if (toon.favorite) favBtn.classList.add('is-fav');
     favBtn.addEventListener('click', e => {
       e.stopPropagation();
       const all = getToons(); const idx = all.findIndex(t => t.id === toon.id);
-      if (idx >= 0) { all[idx].favorite = !all[idx].favorite; saveToons(all); }
+      if (idx >= 0) { const nowFav = !all[idx].favorite; all[idx].favorite = nowFav; if (nowFav) all[idx].favOrder = Date.now(); saveToons(all); }
       render();
     });
     card.querySelector('.delete').addEventListener('click', e => { e.stopPropagation(); if (!confirm(`Remove "${toon.title}"?`)) return; saveToons(getToons().filter(t => t.id !== toon.id)); render(); });
@@ -148,19 +212,19 @@ function render() {
 }
 function updateToon(id, changes) { saveToons(getToons().map(t => t.id === id ? { ...t, ...changes, updatedAt: Date.now() } : t)); render(); }
 
-searchForm.addEventListener('submit', event => {
-  event.preventDefault();
+searchForm.addEventListener('submit', e => e.preventDefault());
+const _srcs = [
+  { key: 'web',          label: 'Web Search' },
+  { key: 'anime-planet', label: 'Anime-Planet' },
+  { key: 'atsu',         label: 'atsu.moe' },
+  { key: 'kagane',       label: 'kagane.to' },
+  { key: 'comix',        label: 'comix.to' },
+];
+searchInput.addEventListener('input', () => {
   const query = searchInput.value.trim();
-  if (!query) return;
-  const sources = [
-    { key: 'web',          label: 'Web Search' },
-    { key: 'anime-planet', label: 'Anime-Planet' },
-    { key: 'atsu',         label: 'atsu.moe' },
-    { key: 'kagane',       label: 'kagane.to' },
-    { key: 'comix',        label: 'comix.to' },
-  ];
   const resultsDiv = document.querySelector('#search-results');
-  resultsDiv.innerHTML = sources.map(s =>
+  if (!query) { resultsDiv.hidden = true; resultsDiv.innerHTML = ''; return; }
+  resultsDiv.innerHTML = _srcs.map(s =>
     `<a class="result-pill" href="${searchUrl(query, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`
   ).join('');
   resultsDiv.hidden = false;
@@ -479,5 +543,239 @@ const _pdfNotes = {
   );
   saveToons(toons);
   localStorage.setItem('toonn-ts-clean-v1', '1');
+})();
+const _altTitles = {
+  // ── Japanese ──────────────────────────────────────────────────────────────
+  "naruto": ["ナルト"],
+  "one punch man": ["ワンパンマン"],
+  "skip beat": ["スキップ・ビート！"],
+  "sakamoto days": ["坂本デイズ"],
+  "frieren beyond journey s end": ["葬送のフリーレン","Sousou no Frieren"],
+  "frieren": ["葬送のフリーレン","Sousou no Frieren"],
+  "mashle magic and muscles": ["マッシュル-MASHLE-"],
+  "demon slayer kimetsu no yaiba": ["鬼滅の刃","Kimetsu no Yaiba"],
+  "chainsaw man": ["チェンソーマン"],
+  "fullmetal alchemist": ["鋼の錬金術師","Hagane no Renkinjutsushi"],
+  "goodnight punpun": ["おやすみプンプン","Oyasumi Punpun"],
+  "land of the lustrous": ["宝石の国","Houseki no Kuni"],
+  "look back": ["ルックバック"],
+  "delicious in dungeon": ["ダンジョン飯","Dungeon Meshi"],
+  "mushishi": ["蟲師"],
+  "the apothecary diaries": ["薬屋のひとりごと","Kusuriya no Hitorigoto"],
+  "yona of the dawn": ["暁のヨナ","Akatsuki no Yona"],
+  "the girl from the other side siuil a run": ["とつくにの少女","Totsukuni no Shoujo"],
+  "witch hat atelier": ["とんがり帽子のアトリエ","Tongari Boushi no Atelier"],
+  "the ancient magus bride": ["魔法使いの嫁","Mahoutsukai no Yome"],
+  "the morose mononokean": ["不機嫌なモノノケ庵","Fukigen na Mononokean"],
+  "monster": ["モンスター"],
+  "the legend of dororo and hyakkimaru": ["どろろ","Dororo"],
+  "dororo re verse": ["どろろ Re:Verse"],
+  "hell s paradise jigokuraku": ["地獄楽","Jigokuraku"],
+  "jujutsu kaisen": ["呪術廻戦"],
+  "jujutsu kaisen 0": ["呪術廻戦 0"],
+  "to your eternity": ["不滅のあなたへ","Fumetsu no Anata e"],
+  "mob psycho 100": ["モブサイコ100"],
+  "flowers of evil": ["惡の華","Aku no Hana"],
+  "senpai is an otokonoko": ["センパイはオトコのコ"],
+  "the witch and the beast": ["魔女と野獣","Majo to Yajuu"],
+  "kemono jihen": ["怪物事変"],
+  "natsume s book of friends": ["夏目友人帳","Natsume Yuujinchou"],
+  "saiki kusuo no nan": ["斉木楠雄のΨ難","The Disastrous Life of Saiki K."],
+  "maria no danzai": ["マリアの断罪"],
+  "boys over flowers": ["花より男子","꽃보다 남자","Hana Yori Dango","Boys Before Flowers"],
+  // ── Chinese ───────────────────────────────────────────────────────────────
+  "chang ge xing": ["長歌行","Song of the Long March"],
+  "1 2 prince": ["½王子"],
+  // ── Korean ────────────────────────────────────────────────────────────────
+  "omniscient reader s viewpoint": ["전지적 독자 시점"],
+  "tower of god": ["신의 탑"],
+  "true beauty": ["여신강림","Goddess Descent"],
+  "the remarried empress": ["재혼 황후"],
+  "your throne": ["그대의 옥좌"],
+  "odd girl out": ["아웃사이더"],
+  "lookism": ["외모지상주의"],
+  "viral hit": ["싸움독학","How to Fight"],
+  "how to fight": ["싸움독학","Viral Hit"],
+  "the villainess lives again": ["악녀는 두 번 산다"],
+  "lady baby": ["레이디 베이비"],
+  "doom breaker": ["절대검감"],
+  "gosu": ["고수"],
+  "weak hero": ["약한영웅"],
+  "cheese in the trap": ["치즈인더트랩"],
+  "the boxer": ["더 복서"],
+  "god of blackfield": ["검은 땅의 지배자"],
+  "sss class revival hunter": ["SSS급 죽어야 사는 헌터"],
+  "return of the blossoming blade": ["화산귀환"],
+  "see you in my 19th life": ["나의 19번째 삶"],
+  "iseop s romance": ["이솝이야기 로맨스","Inso's Law"],
+  "the sound of magic annarasumanara": ["안나라수마나라"],
+  // ── Korean (extended) ─────────────────────────────────────────────────────
+  "a stepmother s marchen": ["어느 날 공주가 되어버렸다"],
+  "all of us are dead": ["지금 우리 학교는"],
+  "our beloved summer": ["그해 우리는"],
+  "beware the villainess": ["그 악녀를 조심하세요!"],
+  "the villainess turns the hourglass": ["악녀는 모래시계를 되돌린다"],
+  "cry or better yet beg": ["울어, 아니 차라리 빌어"],
+  "jinx": ["징크스"],
+  "roxana": ["록사나"],
+  "light and shadow": ["빛과 그림자"],
+  "spirit fingers": ["스피릿 핑거스"],
+  "the abandoned empress": ["버림받은 황비"],
+  "kill the villainess": ["악녀를 죽여라"],
+  "surviving romance": ["로맨스 생존기"],
+  "unholy blood": ["불경한 피"],
+  "the crown princess scandal": ["황태자비 납치사건"],
+  "the pale horse": ["창백한 말"],
+  "the broken ring": ["깨진 반지"],
+  "tears on a withered flower": ["시든 꽃에 눈물을"],
+  "secret lady": ["비밀의 레이디"],
+  "my deepest secret": ["나의 가장 깊은 비밀"],
+  "lady crystal is a man": ["크리스탈 레이디는 남자다"],
+  "the maid and the vampire": ["메이드와 뱀파이어"],
+  "guardians of the lamb": ["어린 양을 지키는 자들"],
+  "miss not so sidekick": ["사이드킥이 아니고요!"],
+  "from knight to lady": ["기사에서 숙녀로"],
+  "this time i will find happiness": ["이번엔 행복을 찾을게"],
+  "the villainess needs her tyrant": ["악녀는 폭군이 필요해"],
+  "for my derelict favorite": ["내 방치된 최애를 위해"],
+  "ghost teller": ["귀담아 들어봐"],
+  "the world without my sister who everyone loved": ["모두가 사랑했던 내 동생이 없는 세상"],
+  "lost in translation": ["번역가 무뢰한"],
+  "your eternal lies": ["영원한 거짓말"],
+  "the spark in your eyes": ["그 눈빛을 마주치면"],
+  "marry my husband": ["남편을 바꿔치기해라"],
+  "the villainess tames the beast": ["악녀가 야수를 길들이다"],
+  "the remarried empress": ["재혼 황후"],
+  "lady baby": ["레이디 베이비"],
+  "the s classes that i raised": ["내가 키운 S급들"],
+  "the greatest estate developer": ["황무지 개척기"],
+  "golden forest": ["황금 숲"],
+  "the golden forest": ["황금 숲"],
+  "where the sun rises": ["태양이 뜨는 곳"],
+  "gyeongseong mermaid": ["경성 인어공주"],
+  "whale star the gyeongseong mermaid": ["경성 인어공주"],
+  "the black dawn": ["검은 여명"],
+  "the dawn to come": ["여명이 오기까지"],
+  "children of orbit": ["궤도의 아이들"],
+  "the tainted half": ["오염된 절반"],
+  "how to win my husband over": ["남편을 내 편으로 만드는 법"],
+  "the remarried empress": ["재혼 황후"],
+  "omniscient reader s viewpoint": ["전지적 독자 시점"],
+  "a mark against thee": ["그대에게 낙인을"],
+  "purple hyacinth": ["퍼플 히아신스"],
+  "my sister s private life": ["내 언니의 사생활"],
+  "no longer a heroine": ["난 여주인공이 아니야!"],
+  "the elixir of the sun": ["태양의 영약"],
+  "the blood of madame giselle": ["마담 지젤의 피"],
+  "for your murder": ["너의 살인을 위하여"],
+  "black winter": ["검은 겨울"],
+  "the rabbit hole": ["토끼굴"],
+  "mystic prince": ["비술 왕자"],
+  "finding camellia": ["카멜리아를 찾아서"],
+  "finding camelia": ["카멜리아를 찾아서"],
+  "the first night with the duke": ["공작님과의 첫날 밤"],
+  "who made me a princess": ["어느 날 공주가 되어버렸다"],
+  "the villainess lives again": ["악녀는 두 번 산다"],
+  "the villainess savior": ["악녀의 구원자"],
+  "the villain s savior": ["악녀의 구원자"],
+  "a villainess for the tyrant": ["폭군을 위한 악녀"],
+  "the abandoned empress": ["버림받은 황비"],
+  "the duchess has a death wish": ["공작부인의 죽음 소원"],
+  "surviving as an obsessive servant": ["집착 하인으로 살아남기"],
+  "i m the tyrant s secretary": ["나는 폭군의 비서입니다"],
+  "i m the soldier s ex girlfriend": ["나는 군인의 전 여자친구입니다"],
+  "i m the male lead s ex": ["나는 남주인공의 전 여자친구입니다"],
+  "how to get my husband on my side": ["남편의 편을 얻는 방법"],
+  "for the remarried empress": ["재혼 황후를 위해"],
+  "mr delivery knight": ["배달 기사"],
+  "the second male lead is a girl": ["두 번째 남주인공은 여자다"],
+  "the red knight seeks no reward": ["붉은 기사는 보상을 원하지 않는다"],
+  "the red knight needs no reward": ["붉은 기사는 보상을 원하지 않는다"],
+  "a happy ending for villains": ["악당들의 해피엔딩"],
+  "second life of a trash princess": ["쓰레기 공주의 두 번째 삶"],
+  "miss not so sidekick": ["사이드킥이 아니고요!"],
+  "let s hide my little brother": ["내 남동생을 숨겨라"],
+  "the male lead is a murderer": ["남주인공은 살인마입니다"],
+  "lady crystal is a man": ["크리스탈 레이디는 남자다"],
+  "from today on i m a boy": ["오늘부터 나는 소년입니다"],
+  "the stalker is trapped": ["스토커가 갇혔다"],
+  "secretly a maid": ["비밀리에 하녀"],
+  "even monsters like fairytales": ["괴물도 동화를 좋아해"],
+  "on the way to meet mom": ["엄마를 만나러 가는 길"],
+  "homeless": ["홈리스"],
+  "muse on fame": ["명성을 향한 뮤즈"],
+  "degree of love": ["사랑의 정도"],
+  "our beloved summer": ["그해 우리는"],
+  "from a knight to a lady": ["기사에서 숙녀로"],
+  "the sparrow and the wolf": [],
+  "black chains": ["검은 사슬"],
+  "once it was love": ["한때는 사랑이었다"],
+  "the pale horse": ["창백한 말"],
+  "the broken ring": ["깨진 반지"],
+  "even when i m dead": ["죽어서도"],
+  "the tyrant s comfort doll": ["폭군의 위안 인형"],
+  "the redemption of earl nottingham": ["노팅엄 백작의 구원"],
+  "run away from me": ["도망쳐봐"],
+  "between seasons": ["계절과 계절 사이"],
+  "between yearning and obsession": ["갈망과 집착 사이"],
+  "betrayal of dignity": ["품위의 배신"],
+  "love and heart": ["사랑과 마음"],
+  "let me die in peace": ["편안하게 죽게 해줘"],
+  "golden forest": ["황금 숲"],
+  "the age of arrogance": ["오만의 시대"],
+  "the tainted half": ["오염된 절반"],
+  "black winter": ["검은 겨울"],
+  "secret alliance": ["비밀 동맹"],
+  "the blood of madame giselle": ["마담 지젤의 피"],
+  "crown princess scandal": ["황태자비 납치사건"],
+  "rumor has it": ["소문이 있다"],
+  "depths of malice": ["악의의 깊이"],
+  "the crown princess scandal": ["황태자비 납치사건"],
+  "one of a kind romance": ["유일무이한 로맨스"],
+  "trapped": ["올가미"],
+  "just leave me be": ["그냥 내버려 둬"],
+  "what remains in the damaged place": ["손상된 곳에 남은 것들"],
+  "a flower blooms on the wall": ["벽에 꽃이 피다"],
+  // ── Japanese (extended) ──────────────────────────────────────────────────
+  "hotaru no yomeiri": ["螢の嫁入り"],
+  "dokuhime": ["毒姫"],
+  "no longer allowed in another world": ["他の世界では通用しない","Shikkaku Isekai"],
+  "kimi wo hitori ni shite agenai": ["君を一人にしてあげない"],
+  "bokura no koi wa shi ni itaru yamai no you de": ["僕らの恋は死に至る病のようで"],
+  "naisho no stalker san": ["内緒のストーカーさん"],
+  "koori no koutei no torikago no naka de": ["氷の皇帝の鳥籠の中で"],
+  "umarekawatte mo mata watashi to kekkon shite kuremasu ka": ["生まれ変わってもまた、私と結婚してくれますか？"],
+  "watashi to kowareta kyuuketsuki": ["私と壊れた吸血鬼"],
+  "kataomoi ga tsurakute shissou shitara yandere ka shita otto ni tsukamarimashita": ["片思いが辛くて失走したら、ヤンデレ化した夫に捕まりました"],
+  "5 kaime no seiryaku kon wa watashi wo nikumu anata to": ["5回目の政略婚は、私を憎むあなたと"],
+  "joou no rakuin horobi no kuni no yotogi miko": ["女王の烙印：滅びの国の夜伽巫女"],
+  "kiraware seijo desu ga shindara shinu hodo aisarete": ["嫌われ聖女ですが、死んだら死ぬほど愛されて"],
+  "koisuru psycho no shirayuki kun": ["恋するサイコのシラユキくん"],
+  "akuyaku reijou wa ringoku no outaishi ni dekiai sareru": ["悪役令嬢は隣国の王太子に溺愛される"],
+  "akuyaku reijou desu ga shiawase ni natte misemasu wa anthology comic": ["悪役令嬢ですが、幸せになってみせますわ！"],
+  "ekikoi the young miss falls for the station attendant": ["駅恋"],
+  "iyashi no otonari san ni wa himitsu ga aru": ["癒しのお隣さんには秘密がある"],
+  "senpai is an otokonoko": ["センパイはオトコのコ"],
+  "the witch and the beast": ["魔女と野獣"],
+  "kemono jihen": ["怪物事変"],
+};
+(function importAltTitles() {
+  if (localStorage.getItem('toonn-alts-v1')) return;
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
+  const toons = getToons().map(t => ({...t}));
+  for (const t of toons) {
+    if (!t.alts || !t.alts.length) {
+      const alts = _altTitles[norm(t.title)];
+      if (alts) t.alts = [...alts];
+    }
+  }
+  saveToons(toons);
+  localStorage.setItem('toonn-alts-v1', '1');
+})();
+(function setVerifiedBadges() {
+  if (localStorage.getItem('toonn-verified-v1')) return;
+  const toons = getToons().map(t => ({ ...t, verified: true }));
+  saveToons(toons);
+  localStorage.setItem('toonn-verified-v1', '1');
 })();
 render();
