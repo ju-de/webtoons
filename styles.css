@@ -81,6 +81,18 @@ h1 em { color:var(--pink-dark); font-style:italic; }
 .gh-panel { background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:flex; flex-direction:column; gap:8px; }
 .gh-token-row { display:flex; gap:8px; margin-bottom:14px; }
 [hidden] { display:none !important; }
+
+/* ── READ-ONLY (no token connected) ────── */
+body.read-only .fav-item { cursor: default; }
+body.read-only .fav-drag-handle { opacity: 0.25; cursor: default; }
+body.read-only .title-h3 { cursor: default; }
+body.read-only .notes-input:disabled,
+body.read-only .status-select:disabled,
+body.read-only .chapter-input:disabled,
+body.read-only .alt-add-btn:disabled,
+body.read-only .alt-input:disabled,
+body.read-only .fav-btn:disabled,
+body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .gh-row { display:flex; gap:8px; }
 .gh-input { flex:1; min-width:0; border:1.5px solid var(--line-dark); border-radius:8px; padding:7px 10px; background:var(--white); color:var(--ink); font-size:.82rem; outline-color:var(--muted); font-family:'Nunito',sans-serif; }
 .gh-connect { border:0; background:var(--muted); color:var(--white); border-radius:8px; padding:7px 16px; font-size:.78rem; font-weight:700; cursor:pointer; align-self:flex-start; transition:background .15s; }

@@ -13,6 +13,7 @@ let _toons = null, _ghSha = null, _ghTimer = null;
 
 function getGHToken() { return localStorage.getItem('tu-n-token') || ''; }
 function setGHToken(t) { localStorage.setItem('tu-n-token', t); }
+function isReadOnly() { return !getGHToken(); }
 function setGHStatus(s) { const el = document.querySelector('#gh-btn'); if (el) el.textContent = s; }
 
 async function fetchFromGH() {
@@ -156,16 +157,16 @@ function renderFavorites() {
   let dragSrc = null;
   favs.forEach(t => {
     const item = document.createElement('div');
-    item.className = 'fav-item'; item.draggable = true; item.dataset.id = t.id;
+    item.className = 'fav-item'; item.draggable = !isReadOnly(); item.dataset.id = t.id;
     const handle = document.createElement('span'); handle.className = 'fav-drag-handle'; handle.textContent = '⠿';
     const ts = document.createElement('span'); ts.className = 'fav-title'; ts.textContent = t.title;
     const ms = document.createElement('span'); ms.className = 'fav-meta'; ms.textContent = `${t.status} · ch ${t.chapter || 0}`;
     item.appendChild(handle); item.appendChild(ts); item.appendChild(ms);
-    item.addEventListener('dragstart', e => { dragSrc = item; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => item.classList.add('dragging'), 0); });
-    item.addEventListener('dragend', () => { item.classList.remove('dragging'); el.querySelectorAll('.fav-item').forEach(i => i.classList.remove('drag-over')); dragSrc = null; });
-    item.addEventListener('dragover', e => { e.preventDefault(); if (item !== dragSrc) item.classList.add('drag-over'); });
-    item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
-    item.addEventListener('drop', e => {
+    if (!isReadOnly()) item.addEventListener('dragstart', e => { dragSrc = item; e.dataTransfer.effectAllowed = 'move'; setTimeout(() => item.classList.add('dragging'), 0); });
+    if (!isReadOnly()) item.addEventListener('dragend', () => { item.classList.remove('dragging'); el.querySelectorAll('.fav-item').forEach(i => i.classList.remove('drag-over')); dragSrc = null; });
+    if (!isReadOnly()) item.addEventListener('dragover', e => { e.preventDefault(); if (item !== dragSrc) item.classList.add('drag-over'); });
+    if (!isReadOnly()) item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
+    if (!isReadOnly()) item.addEventListener('drop', e => {
       e.preventDefault();
       if (!dragSrc || dragSrc === item) return;
       item.classList.remove('drag-over');
@@ -183,6 +184,7 @@ function renderFavorites() {
   });
 }
 function render() {
+  document.body.classList.toggle('read-only', isReadOnly());
   const toons = getToons();
   updateDashboard(toons);
   renderFavorites();
@@ -222,7 +224,7 @@ function render() {
       if (e.target.closest('.title-h3') && !notesDiv.hidden) return;
       const expanding = notesDiv.hidden;
       notesDiv.hidden = !expanding;
-      titleH3.contentEditable = expanding ? 'true' : 'false';
+      titleH3.contentEditable = (expanding && !isReadOnly()) ? 'true' : 'false';
       if (expanding) {
         const clickedTitle = !!e.target.closest('.title-h3');
         setTimeout(() => (clickedTitle ? titleH3 : notesTA).focus(), 10);
@@ -277,6 +279,10 @@ function render() {
       render();
     });
     card.querySelector('.delete').addEventListener('click', e => { e.stopPropagation(); if (!confirm(`Remove "${toon.title}"?`)) return; saveToons(getToons().filter(t => t.id !== toon.id)); render(); });
+    if (isReadOnly()) {
+      article.querySelectorAll('.status-select, .chapter-input, .alt-input, .alt-add-btn, .fav-btn, .notes-input').forEach(el => { el.disabled = true; });
+      article.querySelectorAll('.alt-tag button').forEach(b => { b.disabled = true; });
+    }
     library.appendChild(card);
   });
 }
@@ -322,23 +328,25 @@ function titleFromUrl(raw) {
   let url;
   try { url = new URL(raw); } catch { return null; }
   const host = url.hostname.replace(/^www\./, '');
-  const parts = url.pathname.split('/').filter(p => p && !/^(chapter|ch|ep|vol|read)[-_]?\d/i.test(p) && !/^\d+$/.test(p));
-
+  const CATS = new Set(['manga', 'manhwa', 'manhua', 'webtoon', 'comic', 'comics', 'series']);
+  const parts = url.pathname.split('/').filter(p =>
+    p && !/^(chapter|ch|ep|vol|read)[-_]?\d/i.test(p) && !/^\d+$/.test(p)
+  );
   let slug = null;
-  if (host === 'anime-planet.com') {
-    const idx = parts.indexOf('manga');
-    if (idx >= 0 && parts[idx + 1]) slug = parts[idx + 1];
-  } else if (host === 'mangaupdates.com') {
+  if (host === 'mangaupdates.com') {
+    // /series/hash/title-slug — skip the hash, take the last segment
     const idx = parts.indexOf('series');
     if (idx >= 0) { const rest = parts.slice(idx + 1); slug = rest.length >= 2 ? rest[rest.length - 1] : rest[0]; }
-  } else if (host === 'kagane.to' || host === 'atsu.moe') {
-    const idx = parts.indexOf('manga');
-    slug = (idx >= 0 && parts[idx + 1]) ? parts[idx + 1] : parts[0];
-  } else if (host === 'comix.to') {
-    const idx = parts.findIndex(p => p === 'comic' || p === 'manga');
-    slug = (idx >= 0 && parts[idx + 1]) ? parts[idx + 1] : parts[parts.length - 1];
   } else {
-    slug = parts[parts.length - 1] || null;
+    // Generic: find the first category segment, title is the one right after it
+    const catIdx = parts.findIndex(p => CATS.has(p.toLowerCase()));
+    if (catIdx >= 0 && parts[catIdx + 1]) {
+      slug = parts[catIdx + 1];
+    } else {
+      // No known category — take the last non-category segment
+      const nonCat = parts.filter(p => !CATS.has(p.toLowerCase()));
+      slug = nonCat[nonCat.length - 1] || null;
+    }
   }
   if (!slug) return null;
   return slug.replace(/[-_]/g, ' ').replace(/(?:^|\s)\S/g, c => c.toUpperCase()).trim();
@@ -346,20 +354,29 @@ function titleFromUrl(raw) {
 
 document.querySelector('#library-search').addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
+  if (isReadOnly()) return;
   const raw = document.querySelector('#library-search').value.trim();
   if (!raw) return;
   let title = raw;
-  if (/^https?:\/\//i.test(raw)) {
+  const wasUrl = /^https?:\/\//i.test(raw);
+  if (wasUrl) {
     title = titleFromUrl(raw);
     if (!title) return;
   }
   const toons = getToons();
-  if (toons.find(t => t.title.toLowerCase() === title.toLowerCase())) return;
   const titled = title.replace(/(?:^|\s+)\S/g, c => c.toUpperCase());
-  toons.unshift({ id: crypto.randomUUID(), title: titled, status: 'reading', chapter: 0, updatedAt: Date.now() });
-  saveToons(toons);
-  filterText = '';
-  document.querySelector('#library-search').value = '';
+  const isDupe = !!toons.find(t => t.title.toLowerCase() === title.toLowerCase());
+  if (!isDupe) {
+    toons.unshift({ id: crypto.randomUUID(), title: titled, status: 'reading', chapter: 0, updatedAt: Date.now() });
+    saveToons(toons);
+  }
+  if (wasUrl) {
+    filterText = titled.toLowerCase();
+    document.querySelector('#library-search').value = titled;
+  } else if (!isDupe) {
+    filterText = '';
+    document.querySelector('#library-search').value = '';
+  }
   render();
 });
 document.querySelector('#import-file').addEventListener('change', function(e) {
