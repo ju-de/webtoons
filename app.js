@@ -13,7 +13,8 @@ let _toons = null, _ghSha = null, _ghTimer = null;
 
 function getGHToken() { return localStorage.getItem('tu-n-token') || ''; }
 function setGHToken(t) { localStorage.setItem('tu-n-token', t); }
-function isReadOnly() { return !getGHToken(); }
+let _previewReadOnly = false;
+function isReadOnly() { return !getGHToken() || _previewReadOnly; }
 function setGHStatus(s) { const el = document.querySelector('#gh-btn'); if (el) el.textContent = s; }
 
 async function fetchFromGH() {
@@ -281,7 +282,7 @@ function render() {
     card.querySelector('.delete').addEventListener('click', e => { e.stopPropagation(); if (!confirm(`Remove "${toon.title}"?`)) return; saveToons(getToons().filter(t => t.id !== toon.id)); render(); });
     if (isReadOnly()) {
       article.querySelectorAll('.status-select, .chapter-input, .alt-input, .alt-add-btn, .fav-btn, .notes-input').forEach(el => { el.disabled = true; });
-      article.querySelectorAll('.alt-tag button').forEach(b => { b.disabled = true; });
+      article.querySelectorAll('.alt-tag button, .delete').forEach(b => { b.disabled = true; });
     }
     library.appendChild(card);
   });
@@ -1048,6 +1049,14 @@ const _altTitles = {
   saveToons(toons);
   localStorage.setItem('toonn-verified-v1', '1');
 })();
+document.querySelector('#preview-ro-btn').addEventListener('click', () => {
+  _previewReadOnly = !_previewReadOnly;
+  document.querySelector('#preview-ro-btn').textContent = _previewReadOnly ? '\u25cf preview' : '\u25cb preview';
+  render();
+});
+document.querySelector('#readonly-connect-btn').addEventListener('click', () => {
+  document.querySelector('#gh-btn').click();
+});
 document.querySelector('#gh-btn').addEventListener('click', async () => {
   if (!getGHToken()) {
     const row = document.querySelector('#gh-token-row');

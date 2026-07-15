@@ -83,6 +83,10 @@ h1 em { color:var(--pink-dark); font-style:italic; }
 [hidden] { display:none !important; }
 
 /* ── READ-ONLY (no token connected) ────── */
+#readonly-banner { display:none; position:sticky; top:0; z-index:100; background:var(--pink); color:var(--ink); font-size:.78rem; font-weight:700; text-align:center; padding:7px 16px; letter-spacing:.03em; }
+#readonly-banner button { background:none; border:1.5px solid var(--ink); border-radius:99px; padding:2px 10px; font-size:.75rem; font-weight:700; color:var(--ink); cursor:pointer; margin-left:8px; }
+#readonly-banner button:hover { background:var(--pink-dark); }
+body.read-only #readonly-banner { display:block; }
 body.read-only .fav-item { cursor: default; }
 body.read-only .fav-drag-handle { opacity: 0.25; cursor: default; }
 body.read-only .title-h3 { cursor: default; }

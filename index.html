@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div id="readonly-banner">view only — <button id="readonly-connect-btn">connect github to edit</button></div>
     <main class="shell">
       <header class="topbar">
         <a class="brand" href="#top" aria-label="兔n home"><span class="brand-stamp"><span class="stamp-top">兔</span><span class="stamp-bot">n</span></span></a>
@@ -39,6 +40,7 @@
           <input type="file" id="import-file" accept=".json" hidden />
           <button class="import-btn" id="export-btn" type="button">↓ export</button>
           <button class="import-btn" id="gh-btn" type="button">○ github</button>
+          <button class="import-btn" id="preview-ro-btn" type="button" title="Toggle view-only preview">○ preview</button>
         </div>
       </section>
       <div id="gh-token-row" class="gh-token-row" hidden>
