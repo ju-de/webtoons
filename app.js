@@ -16,26 +16,38 @@ function setGHToken(t) { localStorage.setItem('tu-n-token', t); }
 function setGHStatus(s) { const el = document.querySelector('#gh-btn'); if (el) el.textContent = s; }
 
 async function fetchFromGH() {
-  setGHStatus('\u2193 sync…');
+  setGHStatus('\u2193 sync\u2026');
   try {
-    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_PATH}?t=${Date.now()}`);
+    const token = getGHToken();
+    const headers = { Accept: 'application/vnd.github.v3+json' };
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, { headers });
     if (!res.ok) { setGHStatus('\u25cb github'); return false; }
-    const data = await res.json();
+    const meta = await res.json();
+    _ghSha = meta.sha;
+    // Decode base64 → bytes → UTF-8 string (handles Korean/Japanese/Chinese)
+    const binary = atob(meta.content.replace(/\n/g, ''));
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const data = JSON.parse(new TextDecoder().decode(bytes));
     if (Array.isArray(data) && data.length > 0) { _toons = data; localStorage.setItem(storageKey, JSON.stringify(data)); }
     setGHStatus('\u2713 github'); return true;
-  } catch { setGHStatus('\u2297 github'); return false; }
+  } catch (e) { setGHStatus('\u2297 github'); return false; }
 }
 
-async function pushToGH() {
+async function pushToGH(isRetry = false) {
   const token = getGHToken(); if (!token) return;
   setGHStatus('\u2191 sync\u2026');
-  // Get current SHA (needed for updates; 404 = file doesn't exist yet, that's fine)
-  try {
-    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (r.ok) { const d = await r.json(); _ghSha = d.sha; }
-  } catch (e) { console.warn('SHA fetch:', e); }
+  // Always re-fetch SHA on retry; fetch if we don't have one yet
+  if (!_ghSha || isRetry) {
+    try {
+      const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, {
+        headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (r.ok) { const d = await r.json(); _ghSha = d.sha; }
+      else _ghSha = null;
+    } catch (e) { console.warn('SHA fetch:', e); }
+  }
   // Encode JSON to base64 properly (handles Korean/Japanese/Chinese characters)
   const json = JSON.stringify(getToons(), null, 2);
   const bytes = new TextEncoder().encode(json);
@@ -50,6 +62,7 @@ async function pushToGH() {
       body: JSON.stringify(body)
     });
     const d = await res.json();
+    if (res.status === 409 && !isRetry) { return pushToGH(true); } // stale SHA — retry once with fresh SHA
     if (!res.ok) { console.error('GitHub push error:', d); setGHStatus('\u2297 ' + (d.message || 'error')); return; }
     if (d.content?.sha) _ghSha = d.content.sha;
     setGHStatus('\u2713 github');
