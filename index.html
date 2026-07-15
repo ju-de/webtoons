@@ -1,78 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webtoon Manager</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>📖 Webtoon Manager</h1>
-            <p class="tagline">Discover & manage your favorite webtoons</p>
-        </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#21152f" />
+    <title>Toontrail — your next webtoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Toontrail home"><span class="brand-mark">T</span> toontrail</a>
+        <a class="profile-link" href="https://www.anime-planet.com/users/cheob" target="_blank" rel="noreferrer">cheob's library <span aria-hidden="true">↗</span></a>
+      </header>
 
-        <!-- Search Section -->
-        <section class="search-section">
-            <div class="search-bar-wrapper">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    class="search-bar" 
-                    placeholder="Search for a webtoon title..."
-                    autocomplete="off"
-                >
-                <button id="searchBtn" class="search-btn">Search</button>
-            </div>
-            
-            <!-- Platform Filter -->
-            <div class="platform-filter">
-                <label>Search on:</label>
-                <div class="filter-options">
-                    <label class="filter-checkbox">
-                        <input type="checkbox" value="all" checked> All Platforms
-                    </label>
-                    <label class="filter-checkbox">
-                        <input type="checkbox" value="anime-planet"> Anime-Planet
-                    </label>
-                    <label class="filter-checkbox">
-                        <input type="checkbox" value="atsu"> Atsu.moe
-                    </label>
-                    <label class="filter-checkbox">
-                        <input type="checkbox" value="kagane"> Kagane.to
-                    </label>
-                    <label class="filter-checkbox">
-                        <input type="checkbox" value="comix"> Comix.to
-                    </label>
-                </div>
-            </div>
-        </section>
+      <section class="hero" id="top">
+        <p class="eyebrow">A little reading compass</p>
+        <h1>Keep your queue close.<br /><em>Find your next obsession.</em></h1>
+        <p class="lede">A private, browser-based tracker for your webtoon pile. Save your place, tag the mood, and jump to the sites you already use.</p>
 
-        <!-- Loading Indicator -->
-        <div id="loadingIndicator" class="loading" style="display: none;">
-            <div class="spinner"></div>
-            <p>Searching...</p>
+        <form class="search-panel" id="search-form">
+          <label for="title-search">What are you looking for?</label>
+          <div class="search-row">
+            <input id="title-search" name="title" type="search" placeholder="Search a title, author, or vibe…" autocomplete="off" />
+            <button type="submit">Search <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="source-picker" role="group" aria-label="Search destination">
+            <button class="source active" data-source="web" type="button">Web search</button>
+            <button class="source" data-source="anime-planet" type="button">Anime-Planet</button>
+            <button class="source" data-source="atsu" type="button">atsu.moe</button>
+            <button class="source" data-source="kagane" type="button">kagane.to</button>
+            <button class="source" data-source="comix" type="button">comix.to</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="dashboard" aria-label="Reading dashboard">
+        <article class="next-card">
+          <div>
+            <p class="eyebrow">Pick up next</p>
+            <h2 id="next-title">Your queue is waiting</h2>
+            <p id="next-meta">Add a title below and it will appear here.</p>
+          </div>
+          <button class="text-button" id="continue-reading" type="button" disabled>Open search <span aria-hidden="true">↗</span></button>
+        </article>
+        <div class="stats" aria-label="Library statistics">
+          <div><strong id="reading-count">0</strong><span>reading</span></div>
+          <div><strong id="queue-count">0</strong><span>in queue</span></div>
+          <div><strong id="done-count">0</strong><span>finished</span></div>
         </div>
+      </section>
 
-        <!-- Results Section -->
-        <section id="resultsSection" class="results-section">
-            <h2>Search Results</h2>
-            <div id="resultsList" class="results-list">
-                <p class="empty-state">Enter a webtoon title to search</p>
-            </div>
-        </section>
+      <section class="section-heading">
+        <div>
+          <p class="eyebrow">Your shelf</p>
+          <h2>Read it your way</h2>
+        </div>
+        <button class="add-button" id="show-add" type="button">+ Add a webtoon</button>
+      </section>
 
-        <!-- Library Section -->
-        <section class="library-section">
-            <h2>My Library</h2>
-            <div id="libraryList" class="library-list">
-                <p class="empty-state">Your library will appear here once integrated</p>
-            </div>
-        </section>
-    </div>
+      <form class="add-form" id="add-form" hidden>
+        <div class="field title-field"><label for="toon-title">Title</label><input id="toon-title" required placeholder="e.g. The Greatest Estate Developer" /></div>
+        <div class="field"><label for="toon-status">Status</label><select id="toon-status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="finished">Finished</option></select></div>
+        <div class="field"><label for="toon-progress">Chapter</label><input id="toon-progress" type="number" min="0" value="0" /></div>
+        <div class="field"><label for="toon-mood">Mood</label><select id="toon-mood"><option>Action</option><option>Romance</option><option>Fantasy</option><option>Comedy</option><option>Drama</option><option>Cozy</option><option>Horror</option></select></div>
+        <button type="submit">Save</button>
+      </form>
 
-    <script src="script.js"></script>
-</body>
+      <div class="filters" role="group" aria-label="Filter your library">
+        <button class="filter active" data-filter="all" type="button">All <span id="all-total">0</span></button>
+        <button class="filter" data-filter="reading" type="button">Reading</button>
+        <button class="filter" data-filter="queue" type="button">Queue</button>
+        <button class="filter" data-filter="finished" type="button">Finished</button>
+      </div>
+      <section class="library" id="library" aria-live="polite"></section>
+
+      <section class="discover">
+        <div class="discover-intro">
+          <p class="eyebrow">When the queue is empty</p>
+          <h2>Try a new trail</h2>
+          <p>These are starter picks—not a replacement for your Anime-Planet history. Use the buttons to check availability and add any that catch your eye.</p>
+        </div>
+        <div class="recommendations" id="recommendations"></div>
+      </section>
+    </main>
+
+    <template id="toon-template">
+      <article class="toon-card">
+        <div class="toon-icon" aria-hidden="true"></div>
+        <div class="toon-details"><div class="card-title-row"><h3></h3><button class="delete" type="button" aria-label="Remove title">×</button></div><p class="toon-subtitle"></p><div class="card-controls"><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="finished">Finished</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="open-search" type="button">Find <span aria-hidden="true">↗</span></button></div></div>
+      </article>
+    </template>
+
+    <footer>Made for slow mornings, cliffhangers, and <span>one more chapter.</span></footer>
+    <script src="app.js"></script>
+  </body>
 </html>
