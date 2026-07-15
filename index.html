@@ -29,20 +29,9 @@
         </form>
       </section>
 
-      <section class="dashboard" aria-label="Reading dashboard">
-        <article class="next-card">
-          <div>
-            <p class="eyebrow">Pick up next</p>
-            <h2 id="next-title">Your queue is waiting</h2>
-            <p id="next-meta">Add a title below and it will appear here.</p>
-          </div>
-          <button class="text-button" id="continue-reading" type="button" disabled>Open search</button>
-        </article>
-        <div class="stats" aria-label="Library statistics">
-          <div><strong id="reading-count">0</strong><span>reading</span></div>
-          <div><strong id="queue-count">0</strong><span>in queue</span></div>
-          <div><strong id="done-count">0</strong><span>complete</span></div>
-        </div>
+      <section class="discover">
+        <p class="eyebrow">favorites</p>
+        <div id="favorites-list"></div>
       </section>
 
       <section class="section-heading">
@@ -71,18 +60,26 @@
       </div>
       <section class="library" id="library" aria-live="polite"></section>
 
-      <section class="discover">
-        <div class="discover-intro">
-          <p class="eyebrow">discover</p>
-          <h2>picks</h2>
+      <section class="dashboard" aria-label="Reading dashboard">
+        <article class="next-card">
+          <div>
+            <p class="eyebrow">Pick up next</p>
+            <h2 id="next-title">Your queue is waiting</h2>
+            <p id="next-meta">Add a title below and it will appear here.</p>
+          </div>
+          <button class="text-button" id="continue-reading" type="button" disabled>Open search</button>
+        </article>
+        <div class="stats" aria-label="Library statistics">
+          <div><strong id="reading-count">0</strong><span>reading</span></div>
+          <div><strong id="queue-count">0</strong><span>in queue</span></div>
+          <div><strong id="done-count">0</strong><span>complete</span></div>
         </div>
-        <div class="recommendations" id="recommendations"></div>
       </section>
     </main>
 
     <template id="toon-template">
       <article class="toon-card">
-        <div class="toon-details"><h3></h3><span class="toon-updated"></span><div class="card-controls"><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="complete">Complete</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="delete" type="button" aria-label="Remove title">×</button></div></div>
+        <div class="toon-details"><h3></h3><span class="toon-updated"></span><div class="card-controls"><button class="fav-btn" type="button" aria-label="Toggle favorite">☆</button><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="complete">Complete</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="delete" type="button" aria-label="Remove title">×</button></div></div>
         <div class="toon-notes" hidden><textarea class="notes-input" placeholder="notes…"></textarea></div>
       </article>
     </template>

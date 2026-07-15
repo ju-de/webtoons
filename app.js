@@ -14,12 +14,6 @@ function getSorted(toons) {
   return s.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0) || a.title.localeCompare(b.title));
 }
 
-const suggestions = [
-  { title: 'The Greatest Estate Developer', note: 'Chaotic fantasy comedy with a clever, very determined lead.' },
-  { title: 'Omniscient Reader’s Viewpoint', note: 'A reader’s knowledge becomes the survival guide in a ruined world.' },
-  { title: 'The S-Classes That I Raised', note: 'Found-family energy, regressors, and a monster-filled second chance.' },
-  { title: 'The Apothecary Prince', note: 'A cozy fantasy detour for when you want wit over constant battles.' }
-];
 
 function getToons() {
   try { return JSON.parse(localStorage.getItem(storageKey)) || []; }
@@ -80,9 +74,28 @@ function updateDashboard(toons) {
     nextTitle.textContent = 'Your queue is waiting'; nextMeta.textContent = 'Add a title below and it will appear here.'; continueButton.disabled = true;
   }
 }
+function renderFavorites() {
+  const el = document.querySelector('#favorites-list');
+  if (!el) return;
+  const favs = getToons().filter(t => t.favorite);
+  el.innerHTML = '';
+  if (!favs.length) {
+    const p = document.createElement('p'); p.className = 'favorites-empty'; p.textContent = 'star a webtoon to pin it here';
+    el.appendChild(p); return;
+  }
+  favs.forEach(t => {
+    const item = document.createElement('div'); item.className = 'fav-item';
+    const ts = document.createElement('span'); ts.className = 'fav-title'; ts.textContent = t.title;
+    const ms = document.createElement('span'); ms.className = 'fav-meta'; ms.textContent = `${t.status} · ch ${t.chapter || 0}`;
+    item.appendChild(ts); item.appendChild(ms);
+    item.addEventListener('click', () => window.open(searchUrl(t.title, 'anime-planet'), '_blank', 'noopener,noreferrer'));
+    el.appendChild(item);
+  });
+}
 function render() {
   const toons = getToons();
   updateDashboard(toons);
+  renderFavorites();
   const shown = activeFilter === 'all' ? toons : toons.filter(t => t.status === activeFilter);
   const filtered = filterText ? shown.filter(t => t.title.toLowerCase().includes(filterText)) : shown;
   const sorted = getSorted(filtered);
@@ -111,7 +124,7 @@ function render() {
     const notesTA = card.querySelector('.notes-input');
     notesTA.value = toon.notes || '';
     article.addEventListener('click', e => {
-      if (e.target.closest('.status-select, .chapter-input, .chapter-label, .delete, .notes-input')) return;
+      if (e.target.closest('.status-select, .chapter-input, .chapter-label, .delete, .notes-input, .fav-btn')) return;
       notesDiv.hidden = !notesDiv.hidden;
       if (!notesDiv.hidden) setTimeout(() => notesTA.focus(), 10);
     });
@@ -119,6 +132,15 @@ function render() {
       const all = getToons();
       const idx = all.findIndex(t => t.id === toon.id);
       if (idx >= 0) { all[idx].notes = notesTA.value; saveToons(all); }
+    });
+    const favBtn = card.querySelector('.fav-btn');
+    favBtn.textContent = toon.favorite ? '★' : '☆';
+    if (toon.favorite) favBtn.classList.add('is-fav');
+    favBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const all = getToons(); const idx = all.findIndex(t => t.id === toon.id);
+      if (idx >= 0) { all[idx].favorite = !all[idx].favorite; saveToons(all); }
+      render();
     });
     card.querySelector('.delete').addEventListener('click', e => { e.stopPropagation(); if (!confirm(`Remove "${toon.title}"?`)) return; saveToons(getToons().filter(t => t.id !== toon.id)); render(); });
     library.appendChild(card);
@@ -188,11 +210,13 @@ document.querySelector('#import-file').addEventListener('change', function(e) {
         if (statusMap[e.status]) apStatus.set(key, statusMap[e.status]);
       }
       const existing = getToons();
-      // Restore timestamps (and optionally status) for existing entries via fuzzy match
+      // Restore timestamps for existing entries via fuzzy match
       const restored = existing.map(t => {
         const key = norm(t.title);
         const ts = apTimestamps.get(key);
-        return ts ? { ...t, updatedAt: ts } : t;
+        if (ts) return { ...t, updatedAt: ts };
+        if (apStatus.has(key)) return { ...t, updatedAt: 0 }; // in AP but no date
+        return t;
       });
       // Add new entries not already in the library
       const restoredKeys = new Set(restored.map(t => norm(t.title)));
@@ -205,12 +229,6 @@ document.querySelector('#import-file').addEventListener('change', function(e) {
     e.target.value = '';
   };
   reader.readAsText(file);
-});
-const recs = document.querySelector('#recommendations');
-suggestions.forEach(rec => {
-  const article = document.createElement('article'); article.className = 'rec';
-  article.innerHTML = `<h3>${rec.title}</h3><p>${rec.note}</p><button type="button">Search it</button>`;
-  article.querySelector('button').addEventListener('click', () => openSearch(rec.title)); recs.appendChild(article);
 });
 document.querySelector('#export-btn').addEventListener('click', () => {
   const a = Object.assign(document.createElement('a'), {
@@ -449,5 +467,17 @@ const _pdfNotes = {
   }
   saveToons(toons);
   localStorage.setItem('toonn-notes-v1', '1');
+})();
+(function cleanStaleTimestamps() {
+  if (localStorage.getItem('toonn-ts-clean-v1')) return;
+  const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+  const safeRecent = Date.now() - 7200000; // keep anything updated within last 2h
+  const toons = getToons().map(t =>
+    (t.updatedAt > midnight.getTime() && t.updatedAt < safeRecent)
+      ? { ...t, updatedAt: 0 }
+      : t
+  );
+  saveToons(toons);
+  localStorage.setItem('toonn-ts-clean-v1', '1');
 })();
 render();
