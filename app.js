@@ -65,15 +65,21 @@ async function pushToGH(isRetry = false) {
     if (res.status === 409 && !isRetry) { return pushToGH(true); } // stale SHA — retry once with fresh SHA
     if (!res.ok) { console.error('GitHub push error:', d); setGHStatus('\u2297 ' + (d.message || 'error')); return; }
     if (d.content?.sha) _ghSha = d.content.sha;
+    clearDirty();
     setGHStatus('\u2713 github');
   } catch (e) { console.error('Push failed:', e); setGHStatus('\u2297 ' + e.message); }
 }
 
-function scheduleGHPush() { clearTimeout(_ghTimer); _ghTimer = setTimeout(pushToGH, 2000); }
+function scheduleGHPush() { clearTimeout(_ghTimer); _ghTimer = setTimeout(pushToGH, 500); }
+
+function markDirty()  { localStorage.setItem('tu-n-dirty', '1'); }
+function clearDirty() { localStorage.removeItem('tu-n-dirty'); }
+function isDirty()    { return !!localStorage.getItem('tu-n-dirty'); }
 
 async function initGHSync() {
-  const fetched = await fetchFromGH();
-  if (!fetched && getGHToken()) await pushToGH();
+  // Push any local changes that didn't make it before the last reload
+  if (isDirty() && getGHToken()) { await pushToGH(); }
+  await fetchFromGH();
 }
 
 function getSorted(toons) {
@@ -95,6 +101,7 @@ function getToons() {
 function saveToons(toons) {
   _toons = toons;
   localStorage.setItem(storageKey, JSON.stringify(toons));
+  markDirty();
   scheduleGHPush();
 }
 // migrate legacy "finished" status to "complete"
