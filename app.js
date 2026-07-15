@@ -6,6 +6,63 @@ const searchInput = document.querySelector('#title-search');
 let activeFilter = 'all';
 let activeSort = 'updated-desc';
 let filterText = '';
+
+// ── GITHUB SYNC (ju-de/webtoons) ─────────────────────────────────────────────────
+const GH_OWNER = 'ju-de', GH_REPO = 'webtoons', GH_PATH = 'library.json', GH_BRANCH = 'main';
+let _toons = null, _ghSha = null, _ghTimer = null;
+
+function getGHToken() { return localStorage.getItem('tu-n-token') || ''; }
+function setGHToken(t) { localStorage.setItem('tu-n-token', t); }
+function setGHStatus(s) { const el = document.querySelector('#gh-btn'); if (el) el.textContent = s; }
+
+async function fetchFromGH() {
+  setGHStatus('\u2193 sync…');
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_PATH}?t=${Date.now()}`);
+    if (!res.ok) { setGHStatus('\u25cb github'); return false; }
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) { _toons = data; localStorage.setItem(storageKey, JSON.stringify(data)); }
+    setGHStatus('\u2713 github'); return true;
+  } catch { setGHStatus('\u2297 github'); return false; }
+}
+
+async function pushToGH() {
+  const token = getGHToken(); if (!token) return;
+  setGHStatus('\u2191 sync\u2026');
+  // Get current SHA (needed for updates; 404 = file doesn't exist yet, that's fine)
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (r.ok) { const d = await r.json(); _ghSha = d.sha; }
+  } catch (e) { console.warn('SHA fetch:', e); }
+  // Encode JSON to base64 properly (handles Korean/Japanese/Chinese characters)
+  const json = JSON.stringify(_toons || [], null, 2);
+  const bytes = new TextEncoder().encode(json);
+  let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b));
+  const content = btoa(binary);
+  const body = { message: 'update library', content, branch: GH_BRANCH };
+  if (_ghSha) body.sha = _ghSha;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Accept: 'application/vnd.github.v3+json' },
+      body: JSON.stringify(body)
+    });
+    const d = await res.json();
+    if (!res.ok) { console.error('GitHub push error:', d); setGHStatus('\u2297 ' + (d.message || 'error')); return; }
+    if (d.content?.sha) _ghSha = d.content.sha;
+    setGHStatus('\u2713 github');
+  } catch (e) { console.error('Push failed:', e); setGHStatus('\u2297 ' + e.message); }
+}
+
+function scheduleGHPush() { clearTimeout(_ghTimer); _ghTimer = setTimeout(pushToGH, 2000); }
+
+async function initGHSync() {
+  const fetched = await fetchFromGH();
+  if (!fetched && getGHToken()) await pushToGH();
+}
+
 function getSorted(toons) {
   const s = [...toons];
   if (activeSort === 'alpha-asc') return s.sort((a, b) => a.title.localeCompare(b.title));
@@ -16,10 +73,17 @@ function getSorted(toons) {
 
 
 function getToons() {
-  try { return JSON.parse(localStorage.getItem(storageKey)) || []; }
-  catch { return []; }
+  if (_toons === null) {
+    try { _toons = JSON.parse(localStorage.getItem(storageKey)) || []; }
+    catch { _toons = []; }
+  }
+  return _toons;
 }
-function saveToons(toons) { localStorage.setItem(storageKey, JSON.stringify(toons)); }
+function saveToons(toons) {
+  _toons = toons;
+  localStorage.setItem(storageKey, JSON.stringify(toons));
+  scheduleGHPush();
+}
 // migrate legacy "finished" status to "complete"
 (function migrate() {
   const toons = getToons();
@@ -916,5 +980,25 @@ const _altTitles = {
   saveToons(toons);
   localStorage.setItem('toonn-verified-v1', '1');
 })();
-updateSearchPills();
-render();
+document.querySelector('#gh-btn').addEventListener('click', async () => {
+  if (!getGHToken()) {
+    const row = document.querySelector('#gh-token-row');
+    row.hidden = !row.hidden;
+    if (!row.hidden) document.querySelector('#gh-token-input').focus();
+    return;
+  }
+  await fetchFromGH(); render();
+});
+document.querySelector('#gh-token-save').addEventListener('click', async () => {
+  const t = document.querySelector('#gh-token-input').value.trim();
+  if (!t) return;
+  setGHToken(t);
+  document.querySelector('#gh-token-row').hidden = true;
+  document.querySelector('#gh-token-input').value = '';
+  await pushToGH();
+  render();
+});
+document.querySelector('#gh-token-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.querySelector('#gh-token-save').click();
+});
+(async () => { await initGHSync(); updateSearchPills(); render(); })();

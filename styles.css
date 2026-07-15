@@ -78,7 +78,12 @@ h1 em { color:var(--pink-dark); font-style:italic; }
 .shelf-actions { display:flex; align-items:center; gap:10px; }
 .import-btn { color:var(--muted); font-size:.78rem; font-weight:600; cursor:pointer; background:var(--card); border:1.5px solid var(--line); padding:6px 14px; border-radius:99px; transition:background .15s; }
 .import-btn:hover { background:var(--pill); }
-.library-filter { margin-bottom:12px; }
+.gh-panel { background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:16px; display:flex; flex-direction:column; gap:8px; }
+.gh-token-row { display:flex; gap:8px; margin-bottom:14px; }
+.gh-row { display:flex; gap:8px; }
+.gh-input { flex:1; min-width:0; border:1.5px solid var(--line-dark); border-radius:8px; padding:7px 10px; background:var(--white); color:var(--ink); font-size:.82rem; outline-color:var(--muted); font-family:'Nunito',sans-serif; }
+.gh-connect { border:0; background:var(--muted); color:var(--white); border-radius:8px; padding:7px 16px; font-size:.78rem; font-weight:700; cursor:pointer; align-self:flex-start; transition:background .15s; }
+.gh-connect:hover { background:var(--ink); }
 .library-filter input { width:100%; border:1.5px solid var(--line-dark); border-radius:12px; padding:8px 14px; background:var(--card); outline-color:var(--muted); color:var(--ink); font-size:.88rem; }
 .library-filter input::placeholder { color:var(--faint); }
 
