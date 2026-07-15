@@ -37,7 +37,7 @@ async function pushToGH() {
     if (r.ok) { const d = await r.json(); _ghSha = d.sha; }
   } catch (e) { console.warn('SHA fetch:', e); }
   // Encode JSON to base64 properly (handles Korean/Japanese/Chinese characters)
-  const json = JSON.stringify(_toons || [], null, 2);
+  const json = JSON.stringify(getToons(), null, 2);
   const bytes = new TextEncoder().encode(json);
   let binary = ''; bytes.forEach(b => binary += String.fromCharCode(b));
   const content = btoa(binary);
