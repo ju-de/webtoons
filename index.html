@@ -3,38 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#21152f" />
-    <title>Toontrail — your next webtoon</title>
+    <meta name="theme-color" content="#c4c0ee" />
+    <title>兔n — your next webtoon</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="Toontrail home"><span class="brand-mark">T</span> toontrail</a>
+        <a class="brand" href="#top" aria-label="兔n home"><span class="brand-mark">兔</span> 兔n</a>
         <a class="profile-link" href="https://www.anime-planet.com/users/cheob" target="_blank" rel="noreferrer">cheob's library <span aria-hidden="true">↗</span></a>
       </header>
 
       <section class="hero" id="top">
-        <p class="eyebrow">A little reading compass</p>
-        <h1>Keep your queue close.<br /><em>Find your next obsession.</em></h1>
-        <p class="lede">A private, browser-based tracker for your webtoon pile. Save your place, tag the mood, and jump to the sites you already use.</p>
+        <p class="eyebrow">a little reading compass</p>
+        <h1>your <em>shelf.</em></h1>
 
         <form class="search-panel" id="search-form">
           <label for="title-search">What are you looking for?</label>
           <div class="search-row">
-            <input id="title-search" name="title" type="search" placeholder="Search a title, author, or vibe…" autocomplete="off" />
+            <input id="title-search" name="title" type="search" placeholder="search a title or author…" autocomplete="off" />
             <button type="submit">Search <span aria-hidden="true">→</span></button>
           </div>
-          <div class="source-picker" role="group" aria-label="Search destination">
-            <button class="source active" data-source="web" type="button">Web search</button>
-            <button class="source" data-source="anime-planet" type="button">Anime-Planet</button>
-            <button class="source" data-source="atsu" type="button">atsu.moe</button>
-            <button class="source" data-source="kagane" type="button">kagane.to</button>
-            <button class="source" data-source="comix" type="button">comix.to</button>
-          </div>
+          <div class="search-results" id="search-results" hidden></div>
         </form>
       </section>
 
@@ -55,11 +48,12 @@
       </section>
 
       <section class="section-heading">
-        <div>
-          <p class="eyebrow">Your shelf</p>
-          <h2>Read it your way</h2>
+        <p class="eyebrow">your shelf</p>
+        <div class="shelf-actions">
+          <label class="import-btn" for="import-file">↑ import</label>
+          <input type="file" id="import-file" accept=".json" hidden />
+          <button class="add-button" id="show-add" type="button">+ add</button>
         </div>
-        <button class="add-button" id="show-add" type="button">+ Add a webtoon</button>
       </section>
 
       <form class="add-form" id="add-form" hidden>
@@ -80,9 +74,8 @@
 
       <section class="discover">
         <div class="discover-intro">
-          <p class="eyebrow">When the queue is empty</p>
-          <h2>Try a new trail</h2>
-          <p>These are starter picks—not a replacement for your Anime-Planet history. Use the buttons to check availability and add any that catch your eye.</p>
+          <p class="eyebrow">discover</p>
+          <h2>picks</h2>
         </div>
         <div class="recommendations" id="recommendations"></div>
       </section>
@@ -95,7 +88,7 @@
       </article>
     </template>
 
-    <footer>Made for slow mornings, cliffhangers, and <span>one more chapter.</span></footer>
+    <footer>兔n</footer>
     <script src="app.js"></script>
   </body>
 </html>

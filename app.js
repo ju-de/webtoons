@@ -4,7 +4,6 @@ const template = document.querySelector('#toon-template');
 const searchForm = document.querySelector('#search-form');
 const searchInput = document.querySelector('#title-search');
 const addForm = document.querySelector('#add-form');
-let activeSource = 'web';
 let activeFilter = 'all';
 
 const suggestions = [
@@ -30,7 +29,7 @@ function searchUrl(title, source = 'web') {
   };
   return sites[source];
 }
-function openSearch(title, source = activeSource) {
+function openSearch(title, source = 'web') {
   if (title.trim()) window.open(searchUrl(title, source), '_blank', 'noopener,noreferrer');
 }
 function updateDashboard(toons) {
@@ -78,11 +77,23 @@ function render() {
 }
 function updateToon(id, changes) { saveToons(getToons().map(t => t.id === id ? { ...t, ...changes } : t)); render(); }
 
-document.querySelectorAll('.source').forEach(button => button.addEventListener('click', () => {
-  activeSource = button.dataset.source;
-  document.querySelectorAll('.source').forEach(b => b.classList.toggle('active', b === button));
-}));
-searchForm.addEventListener('submit', event => { event.preventDefault(); openSearch(searchInput.value); });
+searchForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const query = searchInput.value.trim();
+  if (!query) return;
+  const sources = [
+    { key: 'web',          label: 'Web Search' },
+    { key: 'anime-planet', label: 'Anime-Planet' },
+    { key: 'atsu',         label: 'atsu.moe' },
+    { key: 'kagane',       label: 'kagane.to' },
+    { key: 'comix',        label: 'comix.to' },
+  ];
+  const resultsDiv = document.querySelector('#search-results');
+  resultsDiv.innerHTML = sources.map(s =>
+    `<a class="result-pill" href="${searchUrl(query, s.key)}" target="_blank" rel="noopener noreferrer">${s.label} <span aria-hidden="true">↗</span></a>`
+  ).join('');
+  resultsDiv.hidden = false;
+});
 document.querySelector('#show-add').addEventListener('click', () => {
   addForm.hidden = !addForm.hidden;
   if (!addForm.hidden) document.querySelector('#toon-title').focus();
@@ -99,6 +110,26 @@ document.querySelectorAll('.filter').forEach(button => button.addEventListener('
   activeFilter = button.dataset.filter;
   document.querySelectorAll('.filter').forEach(b => b.classList.toggle('active', b === button)); render();
 }));
+document.querySelector('#import-file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const data = JSON.parse(evt.target.result);
+      const statusMap = { 'reading': 'reading', 'read': 'finished', 'stalled': 'queue', 'want to read': 'queue' };
+      const existing = getToons();
+      const existingTitles = new Set(existing.map(t => t.title.toLowerCase()));
+      const imported = (data.entries || [])
+        .filter(entry => statusMap[entry.status] && !existingTitles.has(entry.name.toLowerCase()))
+        .map(entry => ({ id: crypto.randomUUID(), title: entry.name, status: statusMap[entry.status], chapter: entry.ch || 0, mood: '' }));
+      saveToons([...existing, ...imported]);
+      render();
+    } catch { /* invalid file */ }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+});
 const recs = document.querySelector('#recommendations');
 suggestions.forEach(rec => {
   const article = document.createElement('article'); article.className = 'rec';
