@@ -13,7 +13,7 @@
   <body>
     <main class="shell">
       <header class="topbar">
-        <a class="brand" href="#top" aria-label="兔n home"><span class="brand-mark">兔</span> n</a>
+        <a class="brand" href="#top" aria-label="兔n home"><span class="brand-stamp"><span class="stamp-top">兔</span><span class="stamp-bot">n</span></span></a>
       </header>
 
       <section class="hero" id="top">
@@ -83,6 +83,7 @@
     <template id="toon-template">
       <article class="toon-card">
         <div class="toon-details"><h3></h3><span class="toon-updated"></span><div class="card-controls"><select class="status-select" aria-label="Reading status"><option value="reading">Reading</option><option value="queue">Queue</option><option value="complete">Complete</option></select><label class="chapter-label">Ch. <input class="chapter-input" type="number" min="0" /></label><button class="delete" type="button" aria-label="Remove title">×</button></div></div>
+        <div class="toon-notes" hidden><textarea class="notes-input" placeholder="notes…"></textarea></div>
       </article>
     </template>
 
