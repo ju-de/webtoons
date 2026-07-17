@@ -130,8 +130,9 @@ body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .toon-card.is-reading { background:#fde8f2; border-color:rgba(210,100,150,0.2); }
 .toon-card.is-reading:hover { background:#fad8ea; }
 .toon-card.copied { border-color:var(--pink-dark); }
-.toon-details { min-width:0; display:flex; align-items:center; gap:10px; }
-.toon-updated { font-size:.58rem; font-family:'Silkscreen',monospace; color:var(--muted); flex-shrink:0; white-space:nowrap; }
+.toon-details { min-width:0; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; }
+.toon-meta-row { flex-basis:100%; display:flex; align-items:baseline; justify-content:space-between; gap:8px; min-width:0; }
+.toon-updated { font-size:.58rem; font-family:'Silkscreen',monospace; color:var(--muted); white-space:nowrap; flex-shrink:0; }
 .verified-badge { font-size:.58rem; color:var(--muted); flex-shrink:0; background:rgba(130,120,180,0.12); border-radius:4px; padding:1px 4px; line-height:1.3; font-family:'Silkscreen',monospace; }
 .card-title-row { flex:1; min-width:0; display:flex; align-items:center; gap:6px; }
 .toon-card h3 { flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:.92rem; font-weight:600; }
@@ -144,7 +145,7 @@ body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .title-input { width:100%; border:1.5px solid var(--line-dark); border-radius:8px; padding:6px 10px; background:var(--white); color:var(--ink); font-size:.88rem; font-weight:600; outline-color:var(--muted); font-family:'Nunito',sans-serif; margin-bottom:8px; display:block; }
 .notes-input { width:100%; border:none; background:transparent; color:var(--ink); font-family:'Nunito',sans-serif; font-size:.82rem; line-height:1.55; resize:none; outline:none; padding:4px 0; min-height:100px; display:block; }
 .notes-input::placeholder { color:var(--faint); }
-.toon-alts-line { font-size:.7rem; color:var(--faint); margin:3px 0 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-height:.9rem; display:block; }
+.toon-alts-line { font-size:.7rem; color:var(--faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-height:.9rem; flex:1; min-width:0; }
 .alts-editor { margin-bottom:8px; padding-bottom:8px; border-bottom:1.5px solid var(--line-dark); }
 .alts-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:6px; }
 .alts-tags:empty { margin-bottom:0; }
