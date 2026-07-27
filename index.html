@@ -22,7 +22,10 @@
         <form class="search-panel" id="search-form">
           <label for="title-search">Click a site below to search, press Enter to search the web</label>
           <div class="search-row">
-            <input id="title-search" name="title" type="search" placeholder="search a title or author…" autocomplete="off" />
+            <div class="input-wrap">
+              <input id="title-search" name="title" type="search" placeholder="search a title or author…" autocomplete="off" />
+              <button class="clear-btn" type="button" aria-label="Clear" hidden>×</button>
+            </div>
           </div>
           <div class="search-results" id="search-results"></div>
         </form>
@@ -49,11 +52,14 @@
       </div>
 
       <div class="library-filter">
-        <input id="library-search" type="search" placeholder="type to filter, or paste a link to get the title; press enter to add a new webtoon…" autocomplete="off" />
+        <div class="input-wrap">
+          <input id="library-search" type="search" placeholder="type to filter, or paste a link to get the title; press enter to add a new webtoon…" autocomplete="off" />
+          <button class="clear-btn" type="button" aria-label="Clear" hidden>×</button>
+        </div>
       </div>
       <div class="filters" role="group" aria-label="Filter your library">
-        <button class="filter active" data-filter="all" type="button">All <span id="all-total">0</span></button>
-        <button class="filter" data-filter="reading" type="button">Reading <span id="reading-total">0</span></button>
+        <button class="filter" data-filter="all" type="button">All <span id="all-total">0</span></button>
+        <button class="filter active" data-filter="reading" type="button">Reading <span id="reading-total">0</span></button>
         <button class="filter" data-filter="queue" type="button">Queue <span id="queue-total">0</span></button>
         <button class="filter" data-filter="complete" type="button">Complete <span id="complete-total">0</span></button>
         <select id="sort-select" class="sort-select" aria-label="Sort order">

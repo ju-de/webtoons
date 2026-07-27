@@ -3,7 +3,7 @@ const library = document.querySelector('#library');
 const template = document.querySelector('#toon-template');
 const searchForm = document.querySelector('#search-form');
 const searchInput = document.querySelector('#title-search');
-let activeFilter = 'all';
+let activeFilter = 'reading';
 let activeSort = 'updated-desc';
 let filterText = '';
 
@@ -1077,5 +1077,17 @@ document.querySelector('#gh-token-save').addEventListener('click', async () => {
 });
 document.querySelector('#gh-token-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.querySelector('#gh-token-save').click();
+});
+document.querySelectorAll('.input-wrap').forEach(wrap => {
+  const input = wrap.querySelector('input');
+  const btn = wrap.querySelector('.clear-btn');
+  const update = () => { btn.hidden = !input.value; };
+  input.addEventListener('input', update);
+  btn.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  });
+  update();
 });
 (async () => { await initGHSync(); updateSearchPills(); render(); })();
