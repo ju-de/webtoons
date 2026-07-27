@@ -219,6 +219,8 @@ function render() {
     const notesDiv = card.querySelector('.toon-notes');
     const notesTA = card.querySelector('.notes-input');
     notesTA.value = toon.notes || '';
+    card.querySelector('.card-quicklinks').innerHTML =
+      _srcs.map(s => `<a class="result-pill card-pill" href="${searchUrl(toon.title, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`).join('');
     const titleH3 = card.querySelector('.title-h3');
     article.addEventListener('click', e => {
       if (e.target.closest('.status-select, .chapter-input, .chapter-label, .delete, .notes-input, .fav-btn, .alt-input, .alt-add-btn, .alt-tag')) return;
