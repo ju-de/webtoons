@@ -227,6 +227,7 @@ function render() {
     copyBtn.addEventListener('click', e => {
       e.stopPropagation();
       navigator.clipboard.writeText(toon.title).then(() => {
+        copyBtn.textContent = '✓ copied'; setTimeout(() => { copyBtn.textContent = '⎘ copy title'; }, 1500);
       });
     });
     quicklinksDiv.appendChild(copyBtn);
