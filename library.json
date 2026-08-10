@@ -1281,7 +1281,7 @@
     "status": "reading",
     "chapter": 113,
     "mood": "",
-    "updatedAt": 1786395360799,
+    "updatedAt": 1750949852000,
     "verified": true,
     "alts": [
       "시든 꽃에 눈물을"
@@ -2425,7 +2425,7 @@
     "status": "reading",
     "chapter": 1,
     "mood": "",
-    "updatedAt": 1784159192571,
+    "updatedAt": 1784044600000,
     "verified": true,
     "alts": [
       "악당은 멸망하게 되어 있다"
@@ -2790,7 +2790,7 @@
     "status": "reading",
     "chapter": 0,
     "mood": "",
-    "updatedAt": 1784963257591,
+    "updatedAt": 1760889716000,
     "favorite": true,
     "verified": true,
     "alts": [
@@ -2843,7 +2843,7 @@
     "status": "reading",
     "chapter": 85,
     "mood": "",
-    "updatedAt": 1786050245860,
+    "updatedAt": 1761661045000,
     "verified": true,
     "alts": [
       "소꿉친구 콤플렉스"
@@ -3690,7 +3690,7 @@
     "status": "reading",
     "chapter": 0,
     "mood": "",
-    "updatedAt": 1784968762509,
+    "updatedAt": 0,
     "verified": true
   },
   {
@@ -7439,5 +7439,1020 @@
     "updatedAt": 1748784438000,
     "notes": "dumb as hell what is pacing or dialogue",
     "verified": true
+  },
+  {
+    "id": "b216abd9-8537-487d-9fc5-3aa3bed34f7a",
+    "title": "Wished You Were Dead",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784073000
+  },
+  {
+    "id": "d38289cd-b92d-4e06-802a-d8944f7f93ff",
+    "title": "Why Ophelia Couldn't Leave",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784099000
+  },
+  {
+    "id": "37bdce8c-4acb-4ae2-ae91-afb51a7da28c",
+    "title": "Even When I’m Dead",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784117000
+  },
+  {
+    "id": "db6b133c-791e-464e-bb44-0cc60bea0aca",
+    "title": "For the Third Time",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784423000
+  },
+  {
+    "id": "bdc9f437-0dd8-40c3-85dc-24ef7f5f4fbb",
+    "title": "The Duchess Has a Deathwish",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784792000
+  },
+  {
+    "id": "a79331dc-8f79-4c32-8b28-ee7a0fa074c8",
+    "title": "I'm the Queen in This Life",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784881000
+  },
+  {
+    "id": "a23165c5-8b09-48c1-910b-37e0494f09b7",
+    "title": "Flirting with The Villain's Dad",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784912000
+  },
+  {
+    "id": "2f8e5699-43cd-432a-8260-36888a87e0c8",
+    "title": "Secretary Undercover",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748784939000
+  },
+  {
+    "id": "59a69306-dcab-4a03-9547-758b9f41c7f9",
+    "title": "Sacrificed",
+    "status": "dropped",
+    "chapter": 87,
+    "updatedAt": 1748784974000
+  },
+  {
+    "id": "faaabaeb-fc95-4344-b7b0-dfe742312d7d",
+    "title": "Reborn to Be a Movie Queen",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785047000
+  },
+  {
+    "id": "56c2a1df-5ebc-46a3-8d0a-10a7bb7801ca",
+    "title": "Perfect Secret Love: The Bad New Wife Is A Little Sweet",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785199000
+  },
+  {
+    "id": "5a17ce26-d2c2-434e-b2a7-d8ce5a4cc947",
+    "title": "Nullitas: The Counterfeit Bride",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785333000
+  },
+  {
+    "id": "a40df3dc-6eb4-49af-a290-bf84a336b55a",
+    "title": "The Lady's Remorse",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785390000
+  },
+  {
+    "id": "b9fd9808-c877-45bf-8a71-ee4c60b5cbf1",
+    "title": "My In-Laws Are Obsessed With Me",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785552000
+  },
+  {
+    "id": "665a190b-fa60-4e05-bedb-b9d6d51f90a1",
+    "title": "My Exes Fell for Me",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785566000
+  },
+  {
+    "id": "69262c3c-2e7d-46f0-a023-2bf61aec9699",
+    "title": "Marry My Husband",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785608000
+  },
+  {
+    "id": "1718acef-4722-4d0a-9d13-a0d483aee236",
+    "title": "Lucia",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785637000
+  },
+  {
+    "id": "ce1e2743-f111-478f-b43b-dd22763d6bdb",
+    "title": "Kanojo ni Naru Hi Another",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785742000
+  },
+  {
+    "id": "4e86b701-b3eb-4a03-8ed7-81652fa9073e",
+    "title": "If You So Desire My Despair",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785859000
+  },
+  {
+    "id": "5f0361ec-e116-480c-bf64-ca45a401a6a0",
+    "title": "Divorcing My Tyrant Husband",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785873000
+  },
+  {
+    "id": "29d5e4c8-3acd-43df-aabb-8999c7710652",
+    "title": "The Acting Empress Still Spends the First Night",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748785994000
+  },
+  {
+    "id": "35d2e540-1a06-4049-bc1f-883bec409507",
+    "title": "I Thought My Time Was Up!",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786019000
+  },
+  {
+    "id": "86fe39b2-9991-423c-a32f-c91f203dd077",
+    "title": "Not Your Typical Reincarnation Story",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786033000
+  },
+  {
+    "id": "a3c081ec-ca63-4db5-9699-25c318e65b10",
+    "title": "Hiding My True Self",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786269000
+  },
+  {
+    "id": "dad36a60-8ccc-4f40-b10b-282be77c3c74",
+    "title": "I Don't Love You Anymore",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786286000
+  },
+  {
+    "id": "dd76a43a-7550-431b-a403-b01cf1b563b5",
+    "title": "How to Survive as a Maid in a Horror Game",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786301000
+  },
+  {
+    "id": "37a7ea19-e2b2-4b54-927f-297df1010926",
+    "title": "How Far Can We Go?",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786387000
+  },
+  {
+    "id": "e078b3bb-ac66-4c71-bee1-fc4c89f2aa07",
+    "title": "To Whom It No Longer Concerns",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786494000
+  },
+  {
+    "id": "e590a826-b3be-4490-8250-f6fb01cc1c67",
+    "title": "Ekikoi: The Young Miss Falls for the Station Attendant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786724000
+  },
+  {
+    "id": "28f24530-a5a8-4d24-b98b-5a47708f67eb",
+    "title": "Dreaming Freedom",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786841000
+  },
+  {
+    "id": "aa6a28e2-4c4a-480e-bfba-aebb31a43146",
+    "title": "Trash Will Always Be Trash",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786899000
+  },
+  {
+    "id": "0ebfcc11-6b53-4973-a691-091931da9fe9",
+    "title": "My Failing Divorce",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748786980000
+  },
+  {
+    "id": "25db4c8a-ecb2-42b4-af9b-b51ff9b2948f",
+    "title": "The Dark Lord's Confession",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787104000
+  },
+  {
+    "id": "d75b39c1-c738-494d-80be-b7994345ab94",
+    "title": "Cheating Men Must Die",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787266000
+  },
+  {
+    "id": "7fddc188-864b-4312-8ca6-a012c456fbd7",
+    "title": "The Demon's Bride: Marked as His Prey by the Seal on Her Body",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787348000
+  },
+  {
+    "id": "d233bf09-bb3b-44cd-938d-1dd5b5dbf355",
+    "title": "A Villainess for the Tyrant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787684000
+  },
+  {
+    "id": "b6b552c0-f961-48a1-b8fd-e4de71fd22f9",
+    "title": "A Flower Blooms on the Wall",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787708000
+  },
+  {
+    "id": "e7337981-5c17-4bd0-a0fe-d25c745a4daa",
+    "title": "The Villainess Tames The Beast",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787789000
+  },
+  {
+    "id": "f2919347-0876-488c-8314-680bbb223bbd",
+    "title": "Ten Ways to Get Dumped by a Tyrant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748787854000
+  },
+  {
+    "id": "91c40e4e-ca13-4d24-aad6-1d99bbcbdbe2",
+    "title": "Rules for Dating Trash",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780018166000
+  },
+  {
+    "id": "c01163ad-1531-4b5f-a7db-767cab36bbb3",
+    "title": "Ugly Duckling Complex",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1766697261000
+  },
+  {
+    "id": "22a151e5-0c67-40d5-9c92-c89ef8ddc22d",
+    "title": "She's Hopeless",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1783493057000
+  },
+  {
+    "id": "7c91776f-3fff-4fe3-ae0a-550639be28f8",
+    "title": "Endless Summer",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780780933000
+  },
+  {
+    "id": "8af3b56a-aec4-412d-baab-9751f3cf31fa",
+    "title": "My Crush Got Possessed by the Duke",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1749233081000
+  },
+  {
+    "id": "653c73b3-d975-4289-b40f-5280f80485a3",
+    "title": "High Society (Gyeonwoo)",
+    "status": "reading",
+    "chapter": 0,
+    "updatedAt": 1748867521000
+  },
+  {
+    "id": "aa9e4b50-6a13-4f00-ab2e-d01330d97c3b",
+    "title": "I Abdicate My Title of Empress",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1754103931000
+  },
+  {
+    "id": "4e8a3946-5fc7-48e0-a965-c982813381a7",
+    "title": "To You Who Swallowed a Star",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1779266469000
+  },
+  {
+    "id": "7aaff1a5-d946-4312-a009-a887c5a58966",
+    "title": "The Guy Upstairs",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780781226000
+  },
+  {
+    "id": "41a134df-01f6-49a4-a71e-03a7490ad15e",
+    "title": "My Gently Raised Beast",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748868037000
+  },
+  {
+    "id": "9d397590-a9a1-4e6c-a77f-32b244be28f9",
+    "title": "How to Survive a Romance Fantasy",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748869315000
+  },
+  {
+    "id": "cf93846a-058f-43a6-94fe-87b841572c21",
+    "title": "So I Married the Anti-Fan",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748869341000
+  },
+  {
+    "id": "7ff0d878-1d92-4be1-95aa-2bb8e1301d9f",
+    "title": "Devilish Romance",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748869416000
+  },
+  {
+    "id": "2998fde6-394c-4cdb-83ee-978e7ce7054d",
+    "title": "The Newlywed Diary of a Witch and a Dragon",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1748869435000
+  },
+  {
+    "id": "5e5fba23-3040-4eaa-8583-9d886756db27",
+    "title": "Who’s That Long-Haired Senior?",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777916877000
+  },
+  {
+    "id": "158ec868-5ebd-4097-98ba-830582640f8d",
+    "title": "His Majesty's Secret Heroine",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1768551576000
+  },
+  {
+    "id": "b78ad005-67a8-42de-9271-2fdc4c70fced",
+    "title": "Queen in the Shadows",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824723
+  },
+  {
+    "id": "119d4422-3c2d-4c0b-ae8c-7ac88e78c357",
+    "title": "Perfect Marriage Revenge",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1749160462000
+  },
+  {
+    "id": "2d70f170-4161-4b43-8d89-92b522457b0b",
+    "title": "Marry My Enemy",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1750626941000
+  },
+  {
+    "id": "8d170d47-997f-4f24-9659-aac8f95cb35a",
+    "title": "Vengeance Named Love",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1749179165000
+  },
+  {
+    "id": "243a69b3-6822-4b91-8964-65e7dac158b3",
+    "title": "The Reason for the Twin Lady’s Disguise",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1754103637000
+  },
+  {
+    "id": "945761d2-13d1-4b30-adfe-fe8c7b05c3b4",
+    "title": "Marriage and Sword",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1750618898000
+  },
+  {
+    "id": "7822d3ae-0444-45cc-af6f-8626362e9b51",
+    "title": "The Magicians",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1750620826000
+  },
+  {
+    "id": "b12a41ef-81c5-407d-848b-cf97e5795481",
+    "title": "Absolute Possession",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1750784857000
+  },
+  {
+    "id": "4af4adbb-3cf4-4105-a6c5-00f642767c8b",
+    "title": "Taming My Villainous Little Brother",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1751027537000
+  },
+  {
+    "id": "c676661d-47df-4631-b910-74449792f699",
+    "title": "The Rebirth of a Tyrannical Empress",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1767859233000
+  },
+  {
+    "id": "fa6e5386-9dab-4b18-a958-9481b96113b4",
+    "title": "Villainess in Love",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1752592145000
+  },
+  {
+    "id": "51bf05bf-2f84-43f4-8e87-3a7ca9c686e3",
+    "title": "Can't Get Enough of You",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1779484839000
+  },
+  {
+    "id": "e1ff01be-3643-43c4-ab7c-8fa3665bb2d2",
+    "title": "Black Chains",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782640698000
+  },
+  {
+    "id": "765bdb9c-afc3-4ad6-a7c5-d73784f78232",
+    "title": "How to Hide the Emperor's Child",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1754836112000
+  },
+  {
+    "id": "4f9db342-2a92-43c3-b728-17b9743a8534",
+    "title": "Watashi to Kowareta Kyuuketsuki",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1755090951000
+  },
+  {
+    "id": "b9004df7-57d1-4a51-bba7-58ae29266f81",
+    "title": "Behind Her Highness’s Smile",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1755319957000
+  },
+  {
+    "id": "a4cba691-77cf-47a1-a20e-0e2654e195b3",
+    "title": "Side Characters Deserve Love Too",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "735a445a-08bf-433c-b6f7-18cc9e677792",
+    "title": "Elissa's Whirlwind Marriage",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1755500733000
+  },
+  {
+    "id": "173d7b9a-a441-4d34-8f6a-d85787634188",
+    "title": "The Taming of the Tyrant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1758124820000
+  },
+  {
+    "id": "695ab68a-c1c4-4090-a2da-d450a44c59c9",
+    "title": "Revenge on the Real One",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777924747000
+  },
+  {
+    "id": "035c0c90-3d3e-4f03-aff4-879721d51dab",
+    "title": "The Villainess Tames the Crazed Devil",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782699719000
+  },
+  {
+    "id": "89fbce4c-9a6d-455d-9889-965b50f45688",
+    "title": "What It Means to Be You",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "10180420-5630-439e-851e-1099b3d9da28",
+    "title": "My Blood-Curdling Campus Life",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1762796181000
+  },
+  {
+    "id": "97d92d73-f0df-4491-bab3-e68b6f248771",
+    "title": "Love at First Bite (Mango Smoothie)",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1762799339000
+  },
+  {
+    "id": "6258d366-e41f-4341-a49a-17958ea02e3f",
+    "title": "Your Regrets Mean Nothing to Me",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1762884186000
+  },
+  {
+    "id": "dd79a601-b22e-4c24-a4bd-073ccc705006",
+    "title": "The Tyrant Wants to Be Good",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780261594000
+  },
+  {
+    "id": "a3c28d98-95f3-41b5-a7b4-acb8213fcb2e",
+    "title": "I Tamed My Ex-Husband’s Mad Dog",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1765567161000
+  },
+  {
+    "id": "5572e0db-e89d-4fdc-b92b-abf1b67a8953",
+    "title": "The Villainess Is Adored by the Crown Prince of the Neighbor Kingdom",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1766132575000
+  },
+  {
+    "id": "71e6c6bb-e9ed-43b3-be67-dcf9d80be148",
+    "title": "The Dame in Shining Armor",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1767033273000
+  },
+  {
+    "id": "87255f96-a66e-439e-97b1-6774ab60bee7",
+    "title": "The Sultan's Love",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1767579311000
+  },
+  {
+    "id": "2d6d16ed-f4e8-4063-89c7-cadf9111e033",
+    "title": "Under the Oak Tree",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1767752430000
+  },
+  {
+    "id": "e51e4d50-2fe7-42cb-ab5b-6d0b6cc5ba20",
+    "title": "Be Still My Heart",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "1b60715d-430c-48a7-9642-aac7839b66b9",
+    "title": "Trans Horizon",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "18a04eb7-bda2-423a-8005-6ffeb5271e89",
+    "title": "Fresh!",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "e0ba75b0-6c52-4380-b9d4-1c25cc2f68cc",
+    "title": "Surviving as the Male Servant of the Monster Count",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1767890881000
+  },
+  {
+    "id": "272fb1e3-7ace-4963-bf29-452f6d741cb6",
+    "title": "Secret Mimi",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "e8cfa14a-682f-4e5c-b8b2-16a86e8c1201",
+    "title": "Warm Black Tea",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1770375664000
+  },
+  {
+    "id": "49531e58-2444-4d29-9697-79f15e0c77eb",
+    "title": "My Husband Was Stolen Twice",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1770053490000
+  },
+  {
+    "id": "00cbeb3e-cc6a-4ccd-8202-efe70f4e47be",
+    "title": "The Flower Dances and the Wind Sings",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1770375269000
+  },
+  {
+    "id": "491b58d0-c056-4a5d-af79-20e1e88838ca",
+    "title": "How Far Is Too Far?",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1770741351000
+  },
+  {
+    "id": "830ff6ae-015e-458d-9b58-5d5b43418388",
+    "title": "Beatrice",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1773849979000
+  },
+  {
+    "id": "4c066cea-9c95-4195-bae4-8e3dcf43b221",
+    "title": "The Flowers of Evil",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1772028759000
+  },
+  {
+    "id": "f43dd45e-a2b4-4b3a-ba1d-91ad3a7203d3",
+    "title": "The Devil’s Kiss",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1772384320000
+  },
+  {
+    "id": "8a5af1d1-2f83-4ade-b9f8-899a4d7be26e",
+    "title": "The Secret of House Francesca",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1772561037000
+  },
+  {
+    "id": "9c37922d-cf8d-4d2e-ba0e-ddfea6a03352",
+    "title": "I Wasn't the Cinderella",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1773346690000
+  },
+  {
+    "id": "d8861b74-3d29-4dad-ab2a-2a79453e35fd",
+    "title": "Got Dropped into a Ghost Story, Still Gotta Work (Novel)",
+    "status": "queue",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "f4467f22-acb0-4c28-b16c-e60bce7e2262",
+    "title": "Maru Is a Puppy",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "4bde2ed5-fffe-48d3-92ad-58a83e122503",
+    "title": "Romance 101",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "68cf8ca4-6b0c-49df-8207-713a792ac71f",
+    "title": "Navillera: Like a Butterfly",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "cba7e6c1-f41f-41c1-88d5-6a764951f8c8",
+    "title": "Kami Nomi zo Shiru Sekai",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "8449e480-d79b-4715-9130-e548d34c0fd8",
+    "title": "Your Smile Is A Trap",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1773519762000
+  },
+  {
+    "id": "3dc412f4-c24d-4792-b0b6-93fe97410a4f",
+    "title": "Webtoon Character Na Kang Lim",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "d5f234e8-a8ac-46c1-a526-73373087671f",
+    "title": "Wondercat Kyuu-chan",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "11eb68da-ee81-41ad-936d-92d11a623c38",
+    "title": "ReLIFE",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "6ca82f78-949c-4329-b32d-4ee9f849ae82",
+    "title": "Behold the True Villainess",
+    "status": "dropped",
+    "chapter": 118,
+    "updatedAt": 1773820456000
+  },
+  {
+    "id": "1d291daf-e9a7-4b1f-9f97-10a863050bcb",
+    "title": "Duke Richard's Haven",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782347237000
+  },
+  {
+    "id": "bf7c84d8-5bc0-4ed0-a9d4-6469d62626e3",
+    "title": "A Royal Princess with Black Hair",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1773850012000
+  },
+  {
+    "id": "04d56a48-8993-4a6e-b92d-8c762af73928",
+    "title": "Bride of Elysion",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "f918345e-6b08-4f43-b6ba-2577546af152",
+    "title": "What's Wrong with You, Duke?",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1775032143000
+  },
+  {
+    "id": "615c9583-58b8-4d01-a837-0ba7b556b057",
+    "title": "Not-Sew-Wicked Stepmom",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "47f7ebbf-267e-4128-a63f-0e52e092c533",
+    "title": "Keep Me Company, Your Highness",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "9db3d779-319d-4b9f-89f3-7771dd76a4fd",
+    "title": "Protect My Star",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "078ea788-7508-4105-8d6b-5522a15d94b0",
+    "title": "A Deal With My Fake Husband",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1775255723000
+  },
+  {
+    "id": "4a8d4718-cacf-4168-88d9-e669cd0ff1e4",
+    "title": "Can We Become Family?",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1778008483000
+  },
+  {
+    "id": "22653221-da45-42ad-ac8c-68d13d4f63aa",
+    "title": "I Got Pregnant with the Tyrant's Child",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777869233000
+  },
+  {
+    "id": "375c361b-e690-4884-a64e-c1a1e73f186f",
+    "title": "Perfectly Fine on My Own, So My Fiancé Can Twist in the Wind",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1779066934000
+  },
+  {
+    "id": "7550e129-95cb-48e7-9593-792e09471a7f",
+    "title": "Dear Nemesis",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777962988000
+  },
+  {
+    "id": "9a9c0613-9931-4da8-b18e-eceac5445e11",
+    "title": "On the Emperor's Lap",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777889685000
+  },
+  {
+    "id": "a992e51f-557a-4eb2-8400-12eba04eed3f",
+    "title": "The Villainess Needs Her Tyrant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1779066625000
+  },
+  {
+    "id": "2669cfe7-ff1c-45e0-84f8-2acae89238ac",
+    "title": "Fiance in Crisis",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "df98a7e4-abec-4912-92c1-6d98b07f2608",
+    "title": "Lady to Queen",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777890403000
+  },
+  {
+    "id": "c2f22a8d-5a8e-4a95-a1a5-986f5872e849",
+    "title": "Solitary Lady",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1778817740000
+  },
+  {
+    "id": "64e82632-bc6c-4ec6-b161-0cf7dc343a29",
+    "title": "The Falcon Princess",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "70676ef8-3a91-40a9-8db7-f54cf59c1595",
+    "title": "Be By My Side",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1777963315000
+  },
+  {
+    "id": "a61c8377-c8f2-477b-a989-69247c85a4c7",
+    "title": "\"At This Rate, I'm Gonna Come...\" The Warden's Relentless Pat-Down",
+    "status": "queue",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "b8cc8c4b-da9a-40bc-a480-728268e23588",
+    "title": "The Duke's Daughter Drops Her Engagement and Facade",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1778865377000
+  },
+  {
+    "id": "c44f80b4-3790-431a-8537-64102732e7d1",
+    "title": "How to Send Your Husband to Hell",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780780828000
+  },
+  {
+    "id": "0e016319-1567-4fc1-9566-790938ea3195",
+    "title": "Age Matters",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780781401000
+  },
+  {
+    "id": "78071105-e2a6-4cf3-9bb9-0a6d7a8f2383",
+    "title": "Ghost Wife",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780781512000
+  },
+  {
+    "id": "61258df6-c933-4e3a-af7e-aff2da15aebe",
+    "title": "Love Me Knot",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780787421000
+  },
+  {
+    "id": "5967a75a-2719-4f3b-91e8-07b6e8cfa050",
+    "title": "Take Me, I'm Yours",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1780851923000
+  },
+  {
+    "id": "f89be005-563e-4cca-91cb-7745e59a36c5",
+    "title": "The Butterfly Metamorphs Thrice",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "60388dcf-c7b9-4f3b-b3de-550009edf079",
+    "title": "The Duke's Servant",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "de3e1221-0e9c-4992-a1e3-50785d46f4f6",
+    "title": "An Observation Log of My Fiancée Who Calls Herself a Villainess",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782023602000
+  },
+  {
+    "id": "104c495b-ad29-4816-aae8-02b214c994d4",
+    "title": "Lips Upon a Sword's Edge",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782099924000
+  },
+  {
+    "id": "dcc04bdb-930e-41c5-98be-fa548b2b1fdf",
+    "title": "Duchess in the Glass House",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "16c38dd4-e88b-4169-ba76-86f86fb996db",
+    "title": "For Better or for Worse",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1783801557000
+  },
+  {
+    "id": "15f393cb-b80d-4fd4-aca5-1ed40ada7f2d",
+    "title": "The Princess in the Attic",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1782675512000
+  },
+  {
+    "id": "9456c4e4-b2b0-417b-8d70-ea1ed7f495bb",
+    "title": "Reincarnating as My Husband's Mistress",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1786404824724
+  },
+  {
+    "id": "723c6ba4-e3e4-417b-b3f9-8ffebc47f781",
+    "title": "The Villainess Becomes a Mom",
+    "status": "dropped",
+    "chapter": 0,
+    "updatedAt": 1783626754000
   }
 ]
