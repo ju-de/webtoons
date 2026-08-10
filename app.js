@@ -138,13 +138,14 @@ function relativeTime(ts) {
   return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'});
 }
 function updateDashboard(toons) {
-  const counts = ['reading', 'queue', 'complete'].reduce((acc, status) => {
+  const counts = ['reading', 'queue', 'complete', 'dropped'].reduce((acc, status) => {
     acc[status] = toons.filter(t => t.status === status).length; return acc;
   }, {});
   document.querySelector('#all-total').textContent = toons.length;
   document.querySelector('#reading-total').textContent = counts.reading;
   document.querySelector('#queue-total').textContent = counts.queue;
   document.querySelector('#complete-total').textContent = counts.complete;
+  document.querySelector('#dropped-total').textContent = counts.dropped;
 }
 function renderFavorites() {
   const el = document.querySelector('#favorites-list');
@@ -201,18 +202,21 @@ function render() {
     const card = template.content.cloneNode(true);
     card.querySelector('.title-h3').textContent = toon.title;
     if (toon.verified) card.querySelector('.verified-badge').hidden = false;
+    if (toon.notes && toon.notes.trim()) card.querySelector('.notes-badge').hidden = false;
     card.querySelector('.toon-updated').textContent = relativeTime(toon.updatedAt);
     const article = card.querySelector('.toon-card');
     const status = card.querySelector('.status-select'); status.value = toon.status;
     const chapter = card.querySelector('.chapter-input'); chapter.value = toon.chapter || 0;
-    chapter.disabled = toon.status === 'complete';
+    chapter.disabled = toon.status === 'complete' || toon.status === 'dropped';
     if (toon.status === 'complete') article.classList.add('is-complete');
     if (toon.status === 'reading') article.classList.add('is-reading');
+    if (toon.status === 'dropped') article.classList.add('is-dropped');
     status.addEventListener('change', () => {
       const isComplete = status.value === 'complete';
-      chapter.disabled = isComplete;
+      chapter.disabled = isComplete || status.value === 'dropped';
       article.classList.toggle('is-complete', isComplete);
       article.classList.toggle('is-reading', status.value === 'reading');
+      article.classList.toggle('is-dropped', status.value === 'dropped');
       updateToon(toon.id, { status: status.value });
     });
     chapter.addEventListener('change', () => updateToon(toon.id, { chapter: Math.max(0, Number(chapter.value) || 0) }));
@@ -399,7 +403,7 @@ document.querySelector('#import-file').addEventListener('change', function(e) {
   reader.onload = function(evt) {
     try {
       const data = JSON.parse(evt.target.result);
-      const statusMap = { 'reading': 'reading', 'read': 'complete', 'stalled': 'queue', 'want to read': 'queue' };
+      const statusMap = { 'reading': 'reading', 'read': 'complete', 'stalled': 'queue', 'want to read': 'queue', 'dropped': 'dropped', "won't read": 'dropped' };
       const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
       const parseDate = s => { if (!s) return 0; const t = new Date(s.replace(' ','T').replace(/\+0+$/,'Z')).getTime(); return isNaN(t) ? 0 : t; };
       // Build normalized title → best timestamp map from anime-planet data
@@ -669,6 +673,102 @@ const _pdfNotes = {
   }
   saveToons(toons);
   localStorage.setItem('toonn-notes-v1', '1');
+})();
+const _droppedList = [
+  ["a deal with my fake husband", 7, "everything is.. so literal\nthe writing is really bad and nothing is left unsaid\nat least the art is decent but im so bored\nand they're setting up the met in childhood trope so cliche"],
+  ["a flower blooms on the wall", 1, "looked interesting but art was actually not as good as it seemed on the thumbnail and the writing really sucks\nher childhood friend is a world famous super model and she's his first love but she doesn't like the concept cause her first love stalked her or smth"],
+  ["a villainess for the tyrant", 12, "fl pretends to be spoiled so she doesnt get assassinated and the emperor instantly takes a liking to her"],
+  ["Akuyaku Reijou wa Ringoku no Outaishi ni Dekiai sareru", 12, "pretty generic and the main plot already resolved but we're still only halfway through?"],
+  ["anyone can become a villainess", 118, "mc is named nivea, she's good with a bow bc she was an olympic archer in her past life\nshe runs away from the temple because she knows she's going to just be used by her family when she becomes the saintess and tries to make the journey back to her duchy with a stranger who is secretly the crown prince\nml and ex fiancé are simps, art is not good, and none of the characters are likeable"],
+  ["beatrice", 106, "mc is stupid as hell and her ex husband looks like a dumbass toad with a powdered wig it takes you right out\nalso she looks like a literal child even though she's 25\ncharacters are unbearable after they get together and their actions or 'redemptions' really don't make sense\nart is sometimes like mother's contract marriage but like worse"],
+  ["bella poupée's engagement", 6, "pathetic puppy dog ml and dom loli fl not my thing"],
+  ["black chain", 73, "this girl bipolar i s2g she despises him one sec and then protects him and gives up her lifespan for him\nhe wanted to beat his fate as a dragon emperor and be free so he purposefully ignored her and took on a different queen but then regretted it when she killed herself\nand then he just groveled the whole time and then she forgives him it's just so shallow\nthe story isn't really cohesive and it's such a slog to get through\nnot rly any payoff and turns out it's not actually complete"],
+  ["can we become family", 131, "started kinda interesting but goes so off the rails\nshe is the reincarnation of a god and her dad is basically a demigod\nthis time she manipulates her adoptive bro into kidnapping her to the ethelred duchy\nhe's also a regressor but hasn't seen her before and turns out he's her actual father"],
+  ["can't get enough of you", 110, "p shallow story ripe w secrets and misunderstandings that were dragged on for so long but had no payoff bc everyone forgives each other so easily\nreminds me of iseops romance and to you who swallowed a star\nhe barely bullies her so the plot description was really misleading\nlmao they rly just introduced a new ml 100 ch in"],
+  ["captive in dreamland", 0, "wtf was that"],
+  ["cheating men must die", 11, "bad translations and art manhua"],
+  ["dame in shining armor", 23, "awkward art and bad writing\nshe's about to be executed but gets fed the herb of time orchestrated by edward bailey since his family is guarding it secretly\nhe also goes back in time so both of them have their memories"],
+  ["demon king's confession", 9, "demon king is a girl, fmc wants to be a paladin but has dark powers instead"],
+  ["divorce plan with husband failed", 63, "boring, tries to be too wholesome\nfailed to divorce the tyrant"],
+  ["don't pick up what you threw away", 48, "dropped for novel instead"],
+  ["dreaming freedom", 127, "former kpop trainee can murder in dreams\nhe becomes kinda a wimp and reverses yandere role with fmc"],
+  ["duke richard's haven", 70, "i generally like the characters in the beginning but man i wish it wasn't a reincarnation story\nand i wish the writing wasnt so cliche\n2ml is pathetic to an annoying degree (\"i liked her first\" \"i'll trample on my fate\" boohoo) like he gives up his entire career to chase her\nactually the characters are kinda frustrating why can't she just say things instead of just turning around and walking away"],
+  ["ekikoi", 7, "station attendant and rich girl, didn't care for love contract trope"],
+  ["elissa's whirlwind marriage", 4, "didn't make it past the beginning where they're children\nso boring and the fl is so annoying, ml is classic tsundere"],
+  ["for better or for worse", 7, "characters are so so over the top\n90s shojo art in a bad way"],
+  ["for the third time", 34, "can't stand the art\ntime keeps rewinding back to the day they hook up or smth and only they know abt it idr\nthird night only"],
+  ["for those of you for whom regret is a luxury", 42, "revenge already happened and now kinda boring\naria is a composer but her brother stole all her compositions and her fiance is cheating on her with her sister, she comes back to life and exposes them and then gets credit back after marrying a duke who turns out knows her but she doesnt rmb"],
+  ["hot black tea", 38, "only kept reading cause i thought this one was complete\ngirl is the daughter of a house keeper who looks exactly like the young master who gets into a car accident\nthe mom pays her to pretend to be him at his school\nshe is not convincing as a guy and they all immediately figure her out pretty much"],
+  ["how far are you ok with", 39, "not super interesting\na sunbae returns to school and at some point she saved the ml who was going to off himself by offering him free coffee when she was working there\nhe goes to same school to meet her again\nshe likes being tied up and blindfolded and cosplay stuff so they try it together"],
+  ["how far can we go", 40, "kinda boring and everything's too easy\nrich family found their lost daughter at an orphanage but she was switched out with fl instead\nlater real daughter comes back and they start mistreating fl\nml has prosopagnosia except he can see fls face for some reason"],
+  ["how to hide the emperor's child", 80, "pretty repetitive and really chugs along once she becomes empress again\nthe emperor never even has a good reason to divorce her in the first place if he's just going to be nice to her immediately\nnone of the characters really have good motivations for things so the pacing is so weird sometimes\nlooks like the Your Throne art"],
+  ["how to survive as a maid in a horror game", 25, "mc is cringe and game system is very in ur face"],
+  ["i dont love you anymore", 51, "discount remarried empress\nnew ml immediately falls in love with fl despite her proposing a contract marriage and declaring she'll never love anyone again and her ex immediately regrets it once she leaves"],
+  ["i got pregnant with the tyrant's child", 33, "could have been interesting but the writing is so bad\nall the characters are stupid and all the mls like her before the story even starts\nthe emperor also links w her in her dreams through a spell\nand of course she has twins"],
+  ["i mistook the identity of the hidden submale lead", 0, "dropped and also it stopped updating anyway\ngirl who used to stalk the duke suddenly remembers the novel and becomes a maid at the palace\nshe has the power to amplify or calm down powers and she fixes the royal family and everyone loves her"],
+  ["i tamed a tyrant and ran away", 58, "should've way earlier but hoped it would get better\ncharlise was turned into a magic sword in her past life and goes back in time\nleaves her uncaring family and becomes the 13th prince dylans swordsmanship teacher so she can get revenge on the empire\nhe calls her master the entire story"],
+  ["i tamed my exhusbands mad dog", 56, "revenge plot doesnt rly make sense and then the mistress kills the ex husband and then herself\nmale lead is illegitimate son of the emperor and also regressed from their last life and then he just simps over her from childhood\nart is kinda jank, reminds me of Your Throne"],
+  ["i thought it was a common isekai", 44, "they make it like a game where there's some hooded figure tryna mess her up but she keeps clearing conditions\ndon't really like that"],
+  ["i thought my time was up", 81, "ml is too puppy dog\nasrahan and lariette who was going to die in three months because of a mana overload\ndoha the high priest pretending to be a regular clergy member and heals lariette"],
+  ["i was the acting empress", 0, "he just immediately loves her for no reason (they each have fire and ice magic so they balance each other's temperatures out or smth), also he's then pressured to take mistresses\nThe Acting Empress Still Spends the First Night"],
+  ["i wasn't the cinderella", 69, "should've a long time ago\nher lover was cheating on her and gets engaged to a princess but her father finds her and her mother and it turns out he's a duke\nshe trains as his successor then comes back to her revenge by getting engaged to her lover's brother, who's mute and in a wheelchair\nexcept he's not even related to the marquis family, he's royal lineage and can walk and talk and has the power to speak anything into existence..."],
+  ["i will surrender the position as empress", 99, "was an ok read at the beginning to pass the time but really no substance and drags on, doubly so near the end\ni will abdicate my postion as empress"],
+  ["if you so desire my despair", 19, "it's so bad\nshe becomes an orphan and lives on the streets until her extended family marries her off to the new duke\nhe hates her family and all the servants bully her\nshe meets one of the duke's knights and they become lovers so the duke sends him to war and he dies\nthe fl is rly cringe and nothing makes sense"],
+  ["it's mine", 139, "kept reading cause i wanted to know the answer to the mystery but they're just half brothers who were locked in isolated rooms as kids by their shared dad as an experiment\nyohan is just not the type of ml i enjoy (pathetic stalker)"],
+  ["Iyashi no Otonari san ni wa Himitsu Ga Aru", 51, "nishina and fujiko\nneighbor who moved next door is secretly obsessed with her bc she saved him from jumping when he was younger and also he's rich and good looking\nshe finds out he's been stalking her when accidentally going into his house but she forgives him and they marry each other immediately"],
+  ["kanojo ni haru hi another", 15, "very manga tropey\nguy turns into a girl overnight but tries to hide it"],
+  ["lips on the tip of a knife", 77, "very poorly written\none of those where the characters voice their actions within their thoughts while doing them and it's the most convoluted thing\nit's so unserious but not actually funny\nmc is such a mary sue and her personality changes to whatever is convenient\nwhy is every single character living their whole lives for her"],
+  ["love at first bite", 20, "when she was little she was so hungry she took a bite out of a fruit on the ground that turned out to be a dragons heart\nworking as a maid later, the dragon shows up again as lord calyx searching for the person who ate his core so he can kill her\nshe cures his insomnia cause she has his core so he keeps her near\nstupid ass fluff so boring\nclassic he's mean to everyone except her"],
+  ["lucia", 45, "ugly art and boring story/characters"],
+  ["marriage and sword", 38, "art isn't that good and they like each other immediately, pacing is also so off and everything is so unnatural and in your face\nelze joined the army as a male mercenary to earn money for her brother's tuition and fought alongside shan, and they have a political marriage by decree of the crown prince"],
+  ["marry my husband", 52, "manhua bs"],
+  ["my blood curdling campus life", 20, "premise sounded interesting but it's really just fluffy slice of life and boring\nshe gets into a prestigious university as the only human in the vampire class bc her blood is energizing or smth and she would donate frequently because she wanted to outdo her sister"],
+  ["my crush got possessed by the duke", 57, "reverse isekai where sooah's childhood friend yuseong gets possessed by the cold duke of the north of a novel she read\nshe eventually helps him go back to his world by falling in love w him and then he begs a dragon to send him back to her world but this time as himself\nsooah has no memories of him and then her friend asks sooah to set her up with him so there's conflict"],
+  ["my ex boyfriends fell in love with me", 59, "dialogue is cringe and stupid shojo tropes in manhwa somehow"],
+  ["my husband was stolen twice", 37, "writing is straight ass\nstarts in modern world where her friend hands her a wedding invite but the groom is her own husband\nthen she dies when the building collapses three years later and wakes up as rosé in a dark romance world\nthe friend is so cartoonishly evil and stupid, and ultimately doesnt even show up in the plot"],
+  ["my inlaws are obsessed with me", 41, "girl immune to duke family's poison blood"],
+  ["not knowing the betrayal of that day", 16, "ugly art and boring\norphan girl married off to old duke and tricked into selling her friend to slavery then he overthrows the duchy"],
+  ["nullitas", 52, "cringe dialogue"],
+  ["observation log of my fiancee who calls herself the villainess", 9, "not my thing, she's just out with it immediately to him about being from japan and this being an otome game, and she's so deluded into setting up everyone and following the storyline\nboring boring boring"],
+  ["oh dear nemesis", 80, "she was a tomboy tyrant and betrayed then killed by her lover, reincarnates after and goes to her nemesis\nfind out later that he also keeps reincarnating and she's always doing smth different in each different loop of his life\nidk mc is just not likable"],
+  ["perfect secret wife the bad new wife is a little sweet", 206, "classic cringe manhua"],
+  ["Perfectly Fine on My Own so My Fiance Can Twist in the Wind", 18, "hinges on dumb misunderstandings\nlike it would b interesting if her fiance actually likes the princess and neglected her bc of that but he's just a clueless guy who's awkward w girls?\nthe entire class gets involved blocking her fiance cause they think he's abusive but when they clear it up they still gate his access to her? and weren't they gossiping and making fun of her at the start"],
+  ["princess in the attic", 8, "she's literally explaining every single thing in her thoughts\nthis is the most egregious example so far by a mile\nher inner monologue sounds like a badly written first-person werewolf fanfic\nAND she has a mascot she talks to"],
+  ["put me to sleep", 29, "not that into the trope in the first place where a character can finally sleep well/not have headaches by having contact with another character\nbe by my side"],
+  ["reason why the twin lady crossdresses", 104, "should've way earlier\nreads like manhua tbh, pacing is all out of whack, dialogue is cringe, and art really isn't that good"],
+  ["rebirth of a tyrannical empress", 25, "was boring and everyone came around so fast to her\nthey dropped all the explanations in one chapter instead of letting u find out the mystery\nand it turns out the tyrant empress was just drugged before and now everyone likes her again"],
+  ["revenge movie queen", 87, "classic cringe manhua"],
+  ["revenge on the real one", 96, "drags on so much for the B plots and the focus is on her magic artefact business solemio instead of anything actually interesting\nher secretly being a great magician is so random and really adds nothing when she's already also an insane business leader at 14"],
+  ["sacrificial princess", 0, "boring\nthey try to sacrifice her and summon killian but apparently she already paid the price cause she kept being sacrificed in past lives"],
+  ["secret of house francezca", 6, "can't place it exactly but this is the kind of webtoon i really dislike\nfake deep and stiff cliche characters\nshe and her brother were turned into puppets with dark magic and stabbed each other\nreally hard to get through"],
+  ["secretary undercover", 65, "awful ceo manhwa writing"],
+  ["seduce the villain's father", 43, "mc too bubble, mc boring, heal through touch trope from divine energy bc her body cant stand magic"],
+  ["she's the older sister of the obssessive male lead", 12, "super fluffy style i dislike\nstarts from when they're children and yurenia becomes a saintess while her brother and their friend go to knight school\nshe gets this black panther from god sidekick\nher brother killed her in the past"],
+  ["sister i'm the queen in this life", 63, "all characters annoying - ariadne, al, isabella, cesare"],
+  ["solitary lady", 66, "meh saw a bunch of hype around this so i thought itd be stepmother marchen/secret lady tier but it's not good at all\nthere's really nothing interesting about this story, it's just stupid tropes that we've seen a million times in magic oi slop that's even more poorly executed"],
+  ["the duchess has a death wish", 39, "i'm the villainess, can i die?"],
+  ["the evil lady's hero", 47, "stopped reading a while ago cause she ended up on some swamp expedition and it was just dragging on\nher name is yunifer and she's like some healer along with the original mc lol"],
+  ["the flower dances and the wind sings", 4, "weird art and writing\nshe dies and goes back in time 3 years and suddenly has a completely different personality and wants to be a good mom to her 15yo son"],
+  ["the villainess needs her tyrant", 45, "another case of she becomes a completely different person when she revives into the past\nhow is it possible that the tyrant emperor who kills everyone for no reason immediately falls in love with her when she suddenly kisses him in front of everyone\nand then of course he's also a regressor and they were married in their prev life\nnone of the actions or reactions of any of the characters make any sense\nthe way the artist draws hair is so nice but there's really no substance"],
+  ["third night only", 43, ""],
+];
+(function importDroppedNotes() {
+  if (localStorage.getItem('toonn-dropped-v1')) return;
+  const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
+  const toons = getToons().map(t => ({...t}));
+  for (const [title, ch, notes] of _droppedList) {
+    const nTitle = norm(title);
+    const idx = toons.findIndex(t => norm(t.title) === nTitle);
+    if (idx >= 0) {
+      toons[idx].status = 'dropped';
+      if (ch > 0 && !toons[idx].chapter) toons[idx].chapter = ch;
+      if (notes && !toons[idx].notes) toons[idx].notes = notes;
+    } else {
+      toons.push({ id: crypto.randomUUID(), title, status: 'dropped', chapter: ch || 0, notes: notes || '', updatedAt: 0 });
+    }
+  }
+  saveToons(toons);
+  localStorage.setItem('toonn-dropped-v1', '1');
 })();
 (function cleanStaleTimestamps() {
   if (localStorage.getItem('toonn-ts-clean-v1')) return;
