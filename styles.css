@@ -148,6 +148,8 @@ body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .title-wrap { flex:1; min-width:0; display:flex; align-items:center; gap:4px; overflow:hidden; }
 .title-h3 { flex:0 1 auto; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:.92rem; font-weight:600; color:var(--ink); outline:none; cursor:default; font-family:'Nunito',sans-serif; line-height:1.3; }
 .title-h3[contenteditable="true"] { cursor:text; border-bottom:1.5px solid var(--line-dark); overflow:visible; white-space:nowrap; }
+.toon-card.is-expanded .title-wrap { align-items:flex-start; overflow:visible; }
+.toon-card.is-expanded .title-h3 { overflow:visible; overflow-wrap:anywhere; white-space:normal; text-overflow:clip; }
 .toon-subtitle { color:var(--muted); margin:3px 0 10px; font-size:.78rem; }
 .toon-subtitle:empty { display:none; margin:0; }
 .toon-notes { border-top:1.5px solid var(--line-dark); margin-top:8px; padding-top:8px; }

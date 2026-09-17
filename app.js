@@ -241,6 +241,7 @@ function render() {
       if (e.target.closest('.title-h3') && !notesDiv.hidden) return;
       const expanding = notesDiv.hidden;
       notesDiv.hidden = !expanding;
+      article.classList.toggle('is-expanded', expanding);
       titleH3.contentEditable = (expanding && !isReadOnly()) ? 'true' : 'false';
       if (expanding) {
         const clickedTitle = !!e.target.closest('.title-h3');
