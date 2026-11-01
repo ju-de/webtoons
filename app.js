@@ -237,6 +237,7 @@ function render() {
     const quicklinksDiv = card.querySelector('.card-quicklinks');
     quicklinksDiv.innerHTML =
       _srcs.map(s => `<a class="result-pill card-pill" href="${searchUrl(toon.title, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`).join('');
+    quicklinksDiv.addEventListener('click', e => { if (e.target.closest('a.result-pill')) copyText(toon.title); });
     const copyBtn = document.createElement('button');
     copyBtn.type = 'button'; copyBtn.className = 'result-pill card-pill copy-title-btn'; copyBtn.textContent = '⎘ copy title';
     copyBtn.addEventListener('click', e => {
@@ -318,6 +319,9 @@ function render() {
 function updateToon(id, changes) { saveToons(getToons().map(t => t.id === id ? { ...t, ...changes, updatedAt: Date.now() } : t)); render(); }
 
 searchForm.addEventListener('submit', e => e.preventDefault());
+function copyText(text) {
+  if (text) navigator.clipboard?.writeText(text).catch(() => {});
+}
 const _srcs = [
   { key: 'anime-planet', label: 'Anime-Planet', home: 'https://www.anime-planet.com/manga' },
   { key: 'manga-updates',label: 'MangaUpdates', home: 'https://www.mangaupdates.com' },
@@ -336,9 +340,13 @@ function updateSearchPills() {
   resultsDiv.hidden = false;
 }
 searchInput.addEventListener('input', updateSearchPills);
+document.querySelector('#search-results').addEventListener('click', e => {
+  if (e.target.closest('.result-pill')) copyText(searchInput.value.trim());
+});
 searchInput.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
   const q = searchInput.value.trim();
+  copyText(q);
   if (q) window.open(searchUrl(q, 'web'), '_blank', 'noopener,noreferrer');
 });
 document.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
@@ -383,7 +391,6 @@ function titleFromUrl(raw) {
 
 document.querySelector('#library-search').addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
-  if (isReadOnly()) return;
   const raw = document.querySelector('#library-search').value.trim();
   if (!raw) return;
   let title = raw;
@@ -392,8 +399,10 @@ document.querySelector('#library-search').addEventListener('keydown', e => {
     title = titleFromUrl(raw);
     if (!title) return;
   }
-  const toons = getToons();
   const titled = title.replace(/(?:^|\s+)\S/g, c => c.toUpperCase());
+  copyText(wasUrl ? titled : raw);
+  if (isReadOnly()) return;
+  const toons = getToons();
   const isDupe = !!toons.find(t => t.title.toLowerCase() === title.toLowerCase());
   if (!isDupe) {
     toons.unshift({ id: crypto.randomUUID(), title: titled, status: 'reading', chapter: 0, updatedAt: Date.now() });
