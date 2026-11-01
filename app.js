@@ -220,6 +220,15 @@ function render() {
       updateToon(toon.id, { status: status.value });
     });
     chapter.addEventListener('change', () => updateToon(toon.id, { chapter: Math.max(0, Number(chapter.value) || 0) }));
+    // Deferred so the click/tap caret placement doesn't override it.
+    chapter.addEventListener('focus', () => setTimeout(() => { const end = chapter.value.length; chapter.setSelectionRange(end, end); }, 0));
+    chapter.addEventListener('input', () => { chapter.value = chapter.value.replace(/\D/g, ''); });
+    chapter.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      chapter.value = Math.max(0, (Number(chapter.value) || 0) + (e.key === 'ArrowUp' ? 1 : -1));
+      chapter.dispatchEvent(new Event('change'));
+    });
     const notesDiv = card.querySelector('.toon-notes');
     const notesTA = card.querySelector('.notes-input');
     notesTA.value = toon.notes || '';
