@@ -319,6 +319,11 @@ function render() {
 function updateToon(id, changes) { saveToons(getToons().map(t => t.id === id ? { ...t, ...changes, updatedAt: Date.now() } : t)); render(); }
 
 searchForm.addEventListener('submit', e => e.preventDefault());
+document.querySelector('#fav-toggle').addEventListener('click', e => {
+  const expanded = e.currentTarget.getAttribute('aria-expanded') !== 'true';
+  e.currentTarget.setAttribute('aria-expanded', String(expanded));
+  document.querySelector('#favorites-section').hidden = !expanded;
+});
 function copyText(text) {
   if (text) navigator.clipboard?.writeText(text).catch(() => {});
 }
