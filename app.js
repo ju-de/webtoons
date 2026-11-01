@@ -232,6 +232,8 @@ function render() {
     const notesDiv = card.querySelector('.toon-notes');
     const notesTA = card.querySelector('.notes-input');
     notesTA.value = toon.notes || '';
+    // Assigning value puts the caret at the end, which makes focus scroll to the bottom.
+    notesTA.setSelectionRange(0, 0);
     const quicklinksDiv = card.querySelector('.card-quicklinks');
     quicklinksDiv.innerHTML =
       _srcs.map(s => `<a class="result-pill card-pill" href="${searchUrl(toon.title, s.key)}" target="_blank" rel="noopener noreferrer">${s.label}</a>`).join('');

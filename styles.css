@@ -156,7 +156,7 @@ body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .card-quicklinks { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
 .card-pill { padding:4px 10px; font-size:.72rem; background:var(--card-2); border-color:var(--line-dark); }
 .title-input { width:100%; border:1.5px solid var(--line-dark); border-radius:8px; padding:6px 10px; background:var(--white); color:var(--ink); font-size:.88rem; font-weight:600; outline-color:var(--muted); font-family:'Nunito',sans-serif; margin-bottom:8px; display:block; }
-.notes-input { width:100%; border:none; background:transparent; color:var(--ink); font-family:'Nunito',sans-serif; font-size:.82rem; line-height:1.55; resize:none; outline:none; padding:4px 0; min-height:100px; display:block; }
+.notes-input { width:100%; border:none; background:transparent; color:var(--ink); font-family:'Nunito',sans-serif; font-size:.92rem; line-height:1.55; resize:none; outline:none; padding:4px 0; min-height:100px; display:block; }
 .notes-input::placeholder { color:var(--faint); }
 .toon-alts-line { font-size:.7rem; color:var(--faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-height:.9rem; flex:1; min-width:0; }
 .alts-editor { margin-bottom:8px; padding-bottom:8px; border-bottom:1.5px solid var(--line-dark); }
@@ -166,7 +166,7 @@ body.read-only .alt-tag button:disabled { opacity: 0.4; cursor: not-allowed; }
 .alt-tag button { border:0; background:transparent; color:var(--faint); cursor:pointer; padding:0; line-height:1; font-size:.75rem; transition:color .15s; }
 .alt-tag button:hover { color:#e08099; }
 .alts-input-row { display:flex; gap:6px; }
-.alt-input { flex:1; min-width:0; border:1.5px solid var(--line-dark); border-radius:8px; padding:4px 8px; background:var(--white); font-size:.78rem; outline-color:var(--muted); color:var(--ink); font-family:'Nunito',sans-serif; }
+.alt-input { flex:1; min-width:0; border:1.5px solid var(--line-dark); border-radius:8px; padding:4px 8px; background:var(--white); font-size:.92rem; outline-color:var(--muted); color:var(--ink); font-family:'Nunito',sans-serif; }
 .alt-add-btn { border:1.5px solid var(--line-dark); background:var(--card); border-radius:8px; padding:4px 10px; font-size:.82rem; cursor:pointer; color:var(--muted); transition:background .15s; }
 .alt-add-btn:hover { background:var(--pill); }
 .delete { color:var(--muted); border:0; background:transparent; font-size:1.2rem; line-height:.75; transition:color .15s; }
@@ -204,7 +204,7 @@ footer span { color:var(--muted); }
 @media (max-width:760px) {
   .topbar { padding:16px 0; }
   .hero { padding:28px 0 24px; }
-  input[type="search"], input[type="text"], input[type="password"], input[type="number"], textarea[class], .title-h3[contenteditable="true"] { font-size:16px; }
+  input[type="search"], input[type="text"]:not(.alt-input), input[type="password"], input[type="number"] { font-size:16px; }
   .dashboard { grid-template-columns:1fr; }
   .next-card { padding:20px; }
   .stats { min-height:84px; }
