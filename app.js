@@ -351,6 +351,14 @@ document.querySelector('#search-results').addEventListener('click', e => {
 searchInput.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
   const q = searchInput.value.trim();
+  if (/^https?:\/\//i.test(q)) {
+    const title = titleFromUrl(q);
+    if (!title) return;
+    searchInput.value = title.replace(/(?:^|\s+)\S/g, c => c.toUpperCase());
+    updateSearchPills();
+    copyText(searchInput.value);
+    return;
+  }
   copyText(q);
   if (q) window.open(searchUrl(q, 'web'), '_blank', 'noopener,noreferrer');
 });
